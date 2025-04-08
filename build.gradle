@@ -1,0 +1,107 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.0'
+    id 'io.spring.dependency-management' version '1.1.5'
+}
+
+group = 'me.synn3r'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '21'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('lombokMapStructVersion', "0.2.0")
+    set('querydslVersion', "5.1.0")
+    set('springKafkaVersion', "3.2.0")
+    set('lombokVersion', "1.18.32")
+    set('mapstructVersion', "1.5.5.Final")
+    set('mockitoVersion', "5.12.0")
+    set('jwtVersion', "9.42")
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+//    implementation 'org.springframework.boot:spring-boot-starter-integration'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation "org.apache.kafka:kafka-streams:${springKafkaVersion}"
+    implementation "com.nimbusds:nimbus-jose-jwt:${jwtVersion}"
+
+
+//    implementation 'org.springframework.integration:spring-integration-http'
+//    implementation 'org.springframework.integration:spring-integration-jpa'
+//    implementation "org.springframework.integration:spring-integration-kafka"
+//    implementation 'org.springframework.integration:spring-integration-mail'
+//    implementation 'org.springframework.integration:spring-integration-redis'
+//    implementation 'org.springframework.integration:spring-integration-security'
+//    implementation 'org.springframework.integration:spring-integration-stomp'
+//    implementation 'org.springframework.integration:spring-integration-websocket'
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "org.springframework.kafka:spring-kafka:${springKafkaVersion}"
+    implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
+    implementation "com.querydsl:querydsl-core:${querydslVersion}"
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.5.2'
+    annotationProcessor(
+            "org.springframework.boot:spring-boot-configuration-processor",
+            "com.querydsl:querydsl-apt:${querydslVersion}:jakarta",
+            "jakarta.annotation:jakarta.annotation-api",
+            "jakarta.persistence:jakarta.persistence-api",
+            "org.projectlombok:lombok-mapstruct-binding:${lombokMapStructVersion}",
+            "org.mapstruct:mapstruct-processor:${mapstructVersion}",
+            "org.projectlombok:lombok:${lombokVersion}",
+    )
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.batch:spring-batch-test'
+//    testImplementation 'org.springframework.integration:spring-integration-test'
+    testImplementation "org.springframework.kafka:spring-kafka-test:${springKafkaVersion}"
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+
+def querydslSrcDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
+
+compileJava {
+    options.generatedSourceOutputDirectory = querydslSrcDir
+    options.compilerArgs += [
+            "-Amapstruct.defaultComponentModel=spring",
+            "-Amapstruct.defaultInjectionStrategy=constructor",
+            "-Amapstruct.unmappedTargetPolicy=IGNORE",
+            "-Amapstruct.verbose=true"
+    ]
+}
+
+tasks {
+    clean {
+        delete file(querydslSrcDir)
+    }
+
+    // OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+    test {
+        useJUnitPlatform()
+        jvmArgs '-Xshare:off' // JVM arg option
+    }
+}

@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: CheongYakJipsa
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+
+jipsa:
+  security:
+    jwt:
+      secret-key: test1234test1234test1234test1234
+      minute: 10
+      algorithm: hs256
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force-response: true
+      force-request: true

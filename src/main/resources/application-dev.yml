@@ -1,0 +1,11 @@
+spring:
+  sql:
+    init:
+      mode: never
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://138.2.117.145:3306/atlas_db
+    username: atlas
+    password: mYDpJnq2JX8DbTbi742YYeLe2GA6oJ7ya8Q9
+  jpa:
+    show-sql: true
