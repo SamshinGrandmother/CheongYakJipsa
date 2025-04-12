@@ -9,6 +9,6 @@ public class LoginController {
   @GetMapping(value={"/", "/login"})
   public String loginPage(Model model) {
     model.addAttribute("loginForm", new LoginForm());
-    return "pages/SignIn";
+    return "pages/SignUp";
   }
 }
