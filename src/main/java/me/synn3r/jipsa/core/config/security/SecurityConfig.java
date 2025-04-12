@@ -62,7 +62,7 @@ public class SecurityConfig {
       .addFilterBefore(loginFilter(),
         UsernamePasswordAuthenticationFilter.class)
       .authorizeHttpRequests(authorize -> authorize
-        .requestMatchers(LOGIN_URL)
+        .requestMatchers(LOGIN_URL, "/", "/bootstrap/**", "/pages/**")
         .permitAll()
         .requestMatchers("/**")
         .authenticated())
