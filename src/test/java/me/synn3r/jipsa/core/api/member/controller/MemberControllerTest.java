@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,7 @@ import me.synn3r.jipsa.core.api.member.repository.MemberRepository;
 import me.synn3r.jipsa.core.api.member.service.MemberService;
 import me.synn3r.jipsa.core.component.security.Role;
 import me.synn3r.jipsa.core.config.security.TestSecurityConfig;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,8 +95,8 @@ class MemberControllerTest extends MemberTestSupport {
     Map<String, Object> jsonObject = new HashMap<>();
     jsonObject.put("name", "테스트123");
     jsonObject.put("email", "abc123@gmail.com");
-    jsonObject.put("password", "test123!");
-    jsonObject.put("passwordConfirm", "test123!");
+    jsonObject.put("password", "Jipsa2025!");
+    jsonObject.put("passwordConfirm", "Jipsa2025!");
     jsonObject.put("role", Role.ADMIN.name());
     mockMvc
       .perform(post("/members")
@@ -111,6 +113,7 @@ class MemberControllerTest extends MemberTestSupport {
       }));
   }
 
+
   @Test
   @DisplayName("사용자 추가 시 이름 없으면 응답코드 400으로 반환")
   void saveMemberNameValidationTest() throws Exception {
@@ -118,6 +121,7 @@ class MemberControllerTest extends MemberTestSupport {
     jsonObject.put("email", "abc123@gmail.com");
     jsonObject.put("password", "test123!");
     jsonObject.put("passwordConfirm", "test123!");
+    jsonObject.put("role", Role.NORMAL.name());
     mockMvc
       .perform(post("/members")
         .contentType(MediaType.APPLICATION_JSON)
@@ -132,6 +136,7 @@ class MemberControllerTest extends MemberTestSupport {
     jsonObject.put("name", "테스트123");
     jsonObject.put("password", "test123!");
     jsonObject.put("passwordConfirm", "test123!");
+    jsonObject.put("role", Role.NORMAL.name());
     mockMvc
       .perform(post("/members")
         .contentType(MediaType.APPLICATION_JSON)
@@ -147,6 +152,7 @@ class MemberControllerTest extends MemberTestSupport {
     jsonObject.put("email", "abc123");
     jsonObject.put("password", "test123!");
     jsonObject.put("passwordConfirm", "test123!");
+    jsonObject.put("role", Role.NORMAL.name());
     mockMvc
       .perform(post("/members")
         .contentType(MediaType.APPLICATION_JSON)
@@ -162,10 +168,10 @@ class MemberControllerTest extends MemberTestSupport {
     jsonObject.put("email", "abc123@gmail.com");
     jsonObject.put("passwordConfirm", "test123!");
     mockMvc
-      .perform(post("/members")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(jsonObject)))
-      .andExpect(status().isBadRequest());
+            .perform(post("/members")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(jsonObject)))
+            .andExpect(status().isBadRequest());
   }
 
 
@@ -176,12 +182,47 @@ class MemberControllerTest extends MemberTestSupport {
     jsonObject.put("name", "테스트123");
     jsonObject.put("email", "abc123@gmail.com");
     jsonObject.put("password", "test123!");
+    jsonObject.put("role", Role.NORMAL.name());
     mockMvc
       .perform(post("/members")
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(jsonObject)))
+      .andDo(print())
       .andExpect(status().isBadRequest());
   }
+
+  @Test
+  @DisplayName("사용자 추가 시 비밀번호와 비밀번호 확인 값이 다를 시 메세지 반환")
+  void saveMemberPasswordCheckConfirmValidationTest() throws Exception {
+    Map<String, Object> jsonObject = new HashMap<>();
+    jsonObject.put("name", "테스트123");
+    jsonObject.put("email", "abc123@gmail.com");
+    jsonObject.put("password", "Jipsa2025!");
+    jsonObject.put("passwordConfirm", "Jipsa2025!!");
+    jsonObject.put("role", Role.NORMAL.name());
+    mockMvc
+            .perform(post("/members")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(jsonObject)))
+            .andExpect(jsonPath("$.message").value(Matchers.containsString("비밀번호가 일치하지 않습니다.")));
+  }
+
+  @Test
+  @DisplayName("사용자 추가 시 비밀번호 복잡도 검증")
+  void saveMemberCheckPasswordComplexValidationTest() throws Exception {
+    Map<String, Object> jsonObject = new HashMap<>();
+    jsonObject.put("name", "테스트123");
+    jsonObject.put("email", "abc123@gmail.com");
+    jsonObject.put("password", "test123");
+    jsonObject.put("passwordConfirm", "test123");
+    jsonObject.put("role", Role.NORMAL.name());
+    mockMvc
+            .perform(post("/members")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(jsonObject)))
+            .andExpect(jsonPath("$.message").value(Matchers.containsString("비밀번호는 대/소문자, 숫자, 특수문자 포함 8글자 이상이어야 합니다.")));
+  }
+
 
 
   @Test
@@ -277,8 +318,8 @@ class MemberControllerTest extends MemberTestSupport {
   void updateMemberPasswordTest() throws Exception {
     Map<String, Object> jsonObject = new HashMap<>();
     jsonObject.put("id", 1L);
-    jsonObject.put("password", "test123!");
-    jsonObject.put("passwordConfirm", "test123!");
+    jsonObject.put("password", "Jipsa2025!");
+    jsonObject.put("passwordConfirm", "Jipsa2025!");
     mockMvc
       .perform(patch("/members")
         .contentType(MediaType.APPLICATION_JSON)
