@@ -10,11 +10,14 @@ import lombok.NoArgsConstructor;
 import me.synn3r.jipsa.core.api.base.domain.Request.Insert;
 import me.synn3r.jipsa.core.api.base.domain.Request.Update;
 import me.synn3r.jipsa.core.api.base.domain.Request.UpdatePassword;
+import me.synn3r.jipsa.core.api.member.validation.PasswordComplexity;
+import me.synn3r.jipsa.core.api.member.validation.PasswordConfirm;
 import me.synn3r.jipsa.core.component.security.Role;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@PasswordConfirm(groups = {Insert.class, Update.class, UpdatePassword.class})
 public class MemberRequest {
 
   @NotNull(groups = {Update.class, UpdatePassword.class})
@@ -32,7 +35,9 @@ public class MemberRequest {
   private Role role;
 
   @NotEmpty(groups = {Insert.class, UpdatePassword.class})
+  @PasswordComplexity(groups = {Insert.class, UpdatePassword.class})
   private String password;
+
   @NotEmpty(groups = {Insert.class, UpdatePassword.class})
   private String passwordConfirm;
 

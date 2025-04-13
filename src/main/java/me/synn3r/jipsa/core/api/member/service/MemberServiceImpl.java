@@ -49,9 +49,7 @@ public class MemberServiceImpl implements MemberService, AuthenticationSuccessLo
   @Override
   @Transactional
   public long saveMember(MemberRequest memberRequest) {
-    if (!memberRequest.getPassword().equals(memberRequest.getPasswordConfirm())) {
-      throw new IllegalArgumentException("비밀번호가 일치하지 않습니다. ");
-    } else if (memberRepository.existsMemberByEmail(memberRequest.getEmail())) {
+    if (memberRepository.existsMemberByEmail(memberRequest.getEmail())) {
       throw new DuplicateKeyException("이미 존재하는 이메일 입니다. ");
     }
     Member member = memberRepository.save(
@@ -71,10 +69,6 @@ public class MemberServiceImpl implements MemberService, AuthenticationSuccessLo
   @Override
   @Transactional
   public void updatePassword(MemberRequest memberRequest) {
-    if (!memberRequest.getPassword().equals(memberRequest.getPasswordConfirm())) {
-      throw new IllegalArgumentException("비밀번호가 일치하지 않습니다. ");
-    }
-
     Member member = memberRepository.findById(memberRequest.getId())
       .orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다. "));
     member.updatePassword(memberRequest.getPassword());
