@@ -31,8 +31,8 @@
         </div>
       </div>
       <div class="card-body">
-        <div th:if="${reason != null}" class="alert alert-danger alert-dismissible text-white" role="alert">
-          <span class="text-sm" th:text="${reason}"></span>
+        <div th:if="${reason != null}" class="fade show alert alert-danger alert-dismissible text-white" role="alert">
+          <span class="text-sm" th:text="#{${reason}}"></span>
           <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>

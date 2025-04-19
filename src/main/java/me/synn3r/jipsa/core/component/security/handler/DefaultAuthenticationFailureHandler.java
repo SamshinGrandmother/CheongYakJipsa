@@ -23,7 +23,7 @@ public class DefaultAuthenticationFailureHandler extends ExceptionMappingAuthent
   // todo configuration 을 사용하여 자동주입받을 수 있게 변경
   private final String USERNAME_PARAMETER_NAME = "email";
   private final String AUTHENTICATION_FAILURE_FORWARD_URL = "/login";
-  private final String AUTHENTICATION_FAILURE_FORWARD_PATH = AUTHENTICATION_FAILURE_FORWARD_URL+ "?reason=unknown";
+  private final String AUTHENTICATION_FAILURE_FORWARD_PATH = AUTHENTICATION_FAILURE_FORWARD_URL+ "?reason=login.unknown";
 
   public DefaultAuthenticationFailureHandler(
     AuthenticationFailureLogger authenticationFailureLogger) {
@@ -31,8 +31,8 @@ public class DefaultAuthenticationFailureHandler extends ExceptionMappingAuthent
     super.setDefaultFailureUrl(AUTHENTICATION_FAILURE_FORWARD_PATH);
 
     Map<String, String> failureUrlMap = new HashMap<>();
-    failureUrlMap.put(UsernameNotFoundException.class.getName(), AUTHENTICATION_FAILURE_FORWARD_URL + "?reason=notfound");
-    failureUrlMap.put(BadCredentialsException.class.getName(), AUTHENTICATION_FAILURE_FORWARD_URL + "?reason=notfound");
+    failureUrlMap.put(UsernameNotFoundException.class.getName(), AUTHENTICATION_FAILURE_FORWARD_URL + "?reason=login.notfound");
+    failureUrlMap.put(BadCredentialsException.class.getName(), AUTHENTICATION_FAILURE_FORWARD_URL + "?reason=login.notfound");
     super.setExceptionMappings(failureUrlMap);
   }
 
