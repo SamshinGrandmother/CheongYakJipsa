@@ -19,3 +19,7 @@ server:
       enabled: true
       force-response: true
       force-request: true
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_KEY:g22PKJqfCnc-4fQ.}
