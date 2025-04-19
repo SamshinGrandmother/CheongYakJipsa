@@ -4,8 +4,8 @@ spring:
       mode: never
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://138.2.117.145:3306/cheongyak
-    username: jibsa
-    password: 2z!2H*3fgcc6jxnyJC3WLxqJ
+    url: ENC(gCe4lSHIvScadHlzHHN2bIiCSoJ/ClrN5y/ul5DtgY3VeXzPKA+b2iR7RiUSMjh+MpVkw0wNR4A=)
+    username: ENC(vrX/puBgWlxU1MzI11OkHg==)
+    password: ENC(1MY2Mi+tISRqC7ZM2c77NtLL+FBAe7udjg6Ssc6XQsDtRntJ2GX1MA==)
   jpa:
     show-sql: true
