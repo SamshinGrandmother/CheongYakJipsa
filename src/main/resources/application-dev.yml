@@ -4,8 +4,8 @@ spring:
       mode: never
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://138.2.117.145:3306/atlas_db
-    username: atlas
-    password: mYDpJnq2JX8DbTbi742YYeLe2GA6oJ7ya8Q9
+    url: jdbc:mariadb://138.2.117.145:3306/cheongyak
+    username: jibsa
+    password: 2z!2H*3fgcc6jxnyJC3WLxqJ
   jpa:
     show-sql: true
