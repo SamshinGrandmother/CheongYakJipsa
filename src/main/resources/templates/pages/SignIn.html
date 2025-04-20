@@ -37,7 +37,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form id="loginForm" role="form" class="text-start" action="/login" method="POST" th:object="${loginForm}" >
+        <form id="loginForm" role="form" class="text-start" th:action="@{/login}" method="POST" th:object="${loginForm}" >
           <div class="input-group input-group-outline my-3">
             <input name="email" placeholder="email"
                    type="email" class="form-control"
