@@ -40,7 +40,6 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-      .csrf(AbstractHttpConfigurer::disable)
             .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
                             .usernameParameter(USERNAME_PARAMETER_NAME)
                             .passwordParameter(PASSWORD_PARAMETER_NAME)
