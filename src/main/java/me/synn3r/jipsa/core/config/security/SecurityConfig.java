@@ -6,13 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -53,7 +50,11 @@ public class SecurityConfig {
         .permitAll()
         .requestMatchers("/**")
         .authenticated())
-      .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin));
+      .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
+      .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
+        .rememberMeParameter("rememberMe")
+        .tokenValiditySeconds(3600))
+      ;
 
     return http.build();
   }
