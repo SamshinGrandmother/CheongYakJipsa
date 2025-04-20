@@ -1,7 +1,6 @@
 package me.synn3r.jipsa.core.config.security;
 
 import lombok.RequiredArgsConstructor;
-import me.synn3r.jipsa.core.component.security.DefaultSecurityContextRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -26,7 +26,6 @@ public class SecurityConfig {
 
   private final String USERNAME_PARAMETER_NAME = "email";
   private final String PASSWORD_PARAMETER_NAME = "password";
-  private final DefaultSecurityContextRepository securityContextRepository;
   private final AuthenticationSuccessHandler successHandler;
   private final AuthenticationFailureHandler failureHandler;
   private final String LOGIN_METHOD = HttpMethod.POST.name();
@@ -46,7 +45,6 @@ public class SecurityConfig {
                             .usernameParameter(USERNAME_PARAMETER_NAME)
                             .passwordParameter(PASSWORD_PARAMETER_NAME)
                             .loginPage(LOGIN_URL)
-                            .securityContextRepository(securityContextRepository)
                             .failureHandler(failureHandler)
                             .successHandler(successHandler)
                             .loginProcessingUrl(LOGIN_URL)
@@ -56,14 +54,11 @@ public class SecurityConfig {
         .permitAll()
         .requestMatchers("/**")
         .authenticated())
-      .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .securityContext(
-        configurer -> configurer.
-          securityContextRepository(securityContextRepository))
       .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin));
 
     return http.build();
   }
+
 
   @Bean
   public CorsFilter corsFilter() {

@@ -14,7 +14,6 @@
 - 🍂 Spring Data JPA 3.3.0
 - ⌨️ QueryDSL 5.1.0
 - 💾 MariaDB
-- 🎫 JWT 9.42
 - 🧪 Junit 5.10
 - 🌶️ Lombok 1.18.32
 
