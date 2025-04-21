@@ -40,7 +40,7 @@ public class MemberController {
 
   @PostMapping("/members")
   public ResponseEntity<Long> saveMember(
-    @Validated({Insert.class}) @RequestBody MemberRequest memberRequest) {
+    @Validated({Insert.class}) MemberRequest memberRequest) {
     return ResponseEntity.ok().body(memberService.saveMember(memberRequest));
   }
 
