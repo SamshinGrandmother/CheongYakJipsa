@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/Body.html}">
 <head>
-  <script type="text/javascript" th:src="@{/pages/SignUp.js}"></script>
+  <script type="text/javascript" th:src="@{/pages/SignIn.js}"></script>
 </head>
 <div layout:fragment="content" class="row">
   <div class="col-lg-4 col-md-8 col-12 mx-auto">
@@ -31,6 +31,12 @@
         </div>
       </div>
       <div class="card-body">
+        <div th:if="${reason != null}" class="fade show alert alert-danger alert-dismissible text-white" role="alert">
+          <span class="text-sm" th:text="#{${reason}}"></span>
+          <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
         <form id="loginForm" role="form" class="text-start" action="/login" method="POST" th:object="${loginForm}" >
           <div class="input-group input-group-outline my-3">
             <input name="email" placeholder="email"
@@ -56,7 +62,7 @@
             <a href="/signUp" class="text-primary text-gradient font-weight-bold">회원가입</a>
           </p>
           <p class="mt-4 text-sm text-center">
-            계정을 까먹었다면?
+            계정을 잊었다면?
             <a href="" class="text-primary text-gradient font-weight-bold">Email 찾기</a> or <a href="" class="text-primary text-gradient font-weight-bold">비밀번호 찾기</a>
           </p>
         </form>

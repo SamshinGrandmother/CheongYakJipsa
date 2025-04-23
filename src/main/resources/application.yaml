@@ -4,8 +4,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-
-
+  messages:
+    basename: messages
 jipsa:
   security:
     jwt:
