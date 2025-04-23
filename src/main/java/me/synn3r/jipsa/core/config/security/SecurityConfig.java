@@ -5,7 +5,6 @@ import me.synn3r.jipsa.core.component.security.DefaultSecurityContextRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -14,13 +13,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.filter.GenericFilterBean;
 
 @Configuration
 @EnableWebSecurity
@@ -32,22 +29,8 @@ public class SecurityConfig {
   private final DefaultSecurityContextRepository securityContextRepository;
   private final AuthenticationSuccessHandler successHandler;
   private final AuthenticationFailureHandler failureHandler;
-  private final AuthenticationManager authenticationManager;
   private final String LOGIN_METHOD = HttpMethod.POST.name();
   private final String LOGIN_URL = "/login";
-
-
-  @Bean
-  public GenericFilterBean loginFilter() {
-    UsernamePasswordAuthenticationFilter loginFilter = new UsernamePasswordAuthenticationFilter();
-    loginFilter.setAuthenticationSuccessHandler(successHandler);
-    loginFilter.setAuthenticationFailureHandler(failureHandler);
-    loginFilter.setSecurityContextRepository(securityContextRepository);
-    loginFilter.setAuthenticationManager(authenticationManager);
-    loginFilter.setUsernameParameter(USERNAME_PARAMETER_NAME);
-    loginFilter.setPasswordParameter(PASSWORD_PARAMETER_NAME);
-    return loginFilter;
-  }
 
   @Bean(name = "loginAntMatcher")
   public RequestMatcher loginAntMatcher() {
@@ -59,8 +42,15 @@ public class SecurityConfig {
     http
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
       .csrf(AbstractHttpConfigurer::disable)
-      .addFilterBefore(loginFilter(),
-        UsernamePasswordAuthenticationFilter.class)
+            .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+                            .usernameParameter(USERNAME_PARAMETER_NAME)
+                            .passwordParameter(PASSWORD_PARAMETER_NAME)
+                            .loginPage(LOGIN_URL)
+                            .securityContextRepository(securityContextRepository)
+                            .failureHandler(failureHandler)
+                            .successHandler(successHandler)
+                            .loginProcessingUrl(LOGIN_URL)
+                    )
       .authorizeHttpRequests(authorize -> authorize
         .requestMatchers(LOGIN_URL, "/", "/bootstrap/**", "/pages/**", "/signup").permitAll()
         .requestMatchers(HttpMethod.POST, "/members").permitAll()

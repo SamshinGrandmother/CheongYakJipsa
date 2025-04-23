@@ -5,12 +5,15 @@ import me.synn3r.jipsa.core.component.security.Role;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LoginController {
+
   @GetMapping(value={"/", "/login"})
-  public String loginPage(Model model) {
+  public String loginPage(Model model, @RequestParam(value="reason", required = false) String reason) {
     model.addAttribute("loginForm", new LoginForm());
+
     return "pages/SignIn";
   }
 
@@ -21,6 +24,7 @@ public class LoginController {
     member.setRole(Role.NORMAL);
     model.addAttribute("signupForm", member);
     return "pages/SignUp";
+
   }
 
 
