@@ -36,15 +36,19 @@ public class Member extends BaseEntity {
   @Enumerated(EnumType.STRING)
   @NotNull
   private Role role;
+  @NotNull
+  private String phoneNumber;
+
   @Enumerated(EnumType.STRING)
   private DeleteType deleteType = DeleteType.ACTIVE;
 
-  public Member(Long id, String email, String name, String password, Role role) {
+  public Member(Long id, String email, String name, String password, Role role, String phoneNumber) {
     this.id = id;
     this.email = email;
     this.name = name;
     this.password = password;
     this.role = role;
+    this.phoneNumber = phoneNumber;
   }
 
   public void update(String name) {

@@ -52,8 +52,8 @@ public class SecurityConfig {
                             .loginProcessingUrl(LOGIN_URL)
                     )
       .authorizeHttpRequests(authorize -> authorize
-        .requestMatchers(LOGIN_URL, "/", "/bootstrap/**", "/pages/**")
-        .permitAll()
+        .requestMatchers(LOGIN_URL, "/", "/bootstrap/**", "/pages/**", "/signup").permitAll()
+        .requestMatchers(HttpMethod.POST, "/members").permitAll()
         .requestMatchers("/**")
         .authenticated())
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

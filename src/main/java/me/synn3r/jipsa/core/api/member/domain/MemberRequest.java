@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import me.synn3r.jipsa.core.api.base.domain.Request.Insert;
 import me.synn3r.jipsa.core.api.base.domain.Request.Update;
 import me.synn3r.jipsa.core.api.base.domain.Request.UpdatePassword;
@@ -15,6 +16,7 @@ import me.synn3r.jipsa.core.api.member.validation.PasswordConfirm;
 import me.synn3r.jipsa.core.component.security.Role;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @PasswordConfirm(groups = {Insert.class, Update.class, UpdatePassword.class})
@@ -40,5 +42,8 @@ public class MemberRequest {
 
   @NotEmpty(groups = {Insert.class, UpdatePassword.class})
   private String passwordConfirm;
+
+  @NotNull(groups = {Insert.class})
+  private String phoneNumber;
 
 }
