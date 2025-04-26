@@ -37,13 +37,13 @@ public class SecurityConfig {
   }
 
   @Bean
-  public RequestMatcher logoutMatcher() {
-    return new AntPathRequestMatcher(logoutUrl(), HttpMethod.GET.name());
+  public RequestMatcher loginAntMatcher() {
+    return new AntPathRequestMatcher(loginUrl(), HttpMethod.POST.name());
   }
 
   @Bean
-  public RequestMatcher loginAntMatcher() {
-    return new AntPathRequestMatcher(loginUrl(), HttpMethod.POST.name());
+  public RequestMatcher logoutMatcher() {
+    return new AntPathRequestMatcher(logoutUrl(), HttpMethod.GET.name());
   }
 
   @Bean
