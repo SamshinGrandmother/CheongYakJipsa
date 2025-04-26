@@ -50,6 +50,9 @@ public class SecurityConfig {
         .permitAll()
         .requestMatchers("/**")
         .authenticated())
+            .logout(customize -> customize
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                    .logoutSuccessUrl("/login"))
       .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
       .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
         .rememberMeParameter("rememberMe")
