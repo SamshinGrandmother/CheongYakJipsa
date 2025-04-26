@@ -41,7 +41,7 @@ public class SecurityConfig {
     return new AntPathRequestMatcher(logoutUrl(), HttpMethod.GET.name());
   }
 
-  @Bean(name = "loginAntMatcher")
+  @Bean
   public RequestMatcher loginAntMatcher() {
     return new AntPathRequestMatcher(loginUrl(), HttpMethod.POST.name());
   }
