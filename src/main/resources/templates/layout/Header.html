@@ -36,7 +36,7 @@
                     <a href="/" class="btn btn-sm mb-0 me-1 bg-gradient-dark">Sign In</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a href="/logout" class="btn btn-sm mb-0 me-1 bg-gradient-dark">Logout</a>
+                    <a th:href="|${@securityConfig.logoutUrl()}|" class="btn btn-sm mb-0 me-1 bg-gradient-dark">Logout</a>
                 </li>
             </ul>
         </div>

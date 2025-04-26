@@ -25,12 +25,25 @@ public class SecurityConfig {
   private final String PASSWORD_PARAMETER_NAME = "password";
   private final AuthenticationSuccessHandler successHandler;
   private final AuthenticationFailureHandler failureHandler;
-  private final String LOGIN_METHOD = HttpMethod.POST.name();
-  private final String LOGIN_URL = "/login";
+
+  @Bean
+  public String loginUrl() {
+    return "/login";
+  }
+
+  @Bean
+  public String logoutUrl() {
+    return "/logout";
+  }
+
+  @Bean
+  public RequestMatcher logoutMatcher() {
+    return new AntPathRequestMatcher(logoutUrl(), HttpMethod.GET.name());
+  }
 
   @Bean(name = "loginAntMatcher")
   public RequestMatcher loginAntMatcher() {
-    return new AntPathRequestMatcher(LOGIN_URL, LOGIN_METHOD);
+    return new AntPathRequestMatcher(loginUrl(), HttpMethod.POST.name());
   }
 
   @Bean
@@ -40,19 +53,19 @@ public class SecurityConfig {
             .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
                             .usernameParameter(USERNAME_PARAMETER_NAME)
                             .passwordParameter(PASSWORD_PARAMETER_NAME)
-                            .loginPage(LOGIN_URL)
+                            .loginPage(loginUrl())
                             .failureHandler(failureHandler)
                             .successHandler(successHandler)
-                            .loginProcessingUrl(LOGIN_URL)
+                            .loginProcessingUrl(loginUrl())
                     )
       .authorizeHttpRequests(authorize -> authorize
-        .requestMatchers(LOGIN_URL, "/", "/bootstrap/**", "/pages/**")
+        .requestMatchers(loginUrl(), "/", "/bootstrap/**", "/pages/**")
         .permitAll()
         .requestMatchers("/**")
         .authenticated())
             .logout(customize -> customize
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                    .logoutSuccessUrl("/login"))
+                    .logoutRequestMatcher(logoutMatcher())
+                    .logoutSuccessUrl(loginUrl()))
       .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
       .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
         .rememberMeParameter("rememberMe")
