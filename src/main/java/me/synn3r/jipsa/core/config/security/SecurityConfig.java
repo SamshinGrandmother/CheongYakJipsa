@@ -20,11 +20,18 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-  private final String USERNAME_PARAMETER_NAME = "email";
-  private final String PASSWORD_PARAMETER_NAME = "password";
   private final AuthenticationSuccessHandler successHandler;
   private final AuthenticationFailureHandler failureHandler;
+
+  @Bean
+  public String userNameParameter() {
+    return "email";
+  }
+
+  @Bean
+  public String passwordParameter() {
+    return "password";
+  }
 
   @Bean
   public String loginUrl() {
@@ -51,8 +58,8 @@ public class SecurityConfig {
     http
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
-                            .usernameParameter(USERNAME_PARAMETER_NAME)
-                            .passwordParameter(PASSWORD_PARAMETER_NAME)
+                            .usernameParameter(userNameParameter())
+                            .passwordParameter(passwordParameter())
                             .loginPage(loginUrl())
                             .failureHandler(failureHandler)
                             .successHandler(successHandler)

@@ -36,13 +36,15 @@
         </div>
         <form id="loginForm" role="form" class="text-start" th:action="|${@securityConfig.loginUrl()}|" method="POST" th:object="${loginForm}" >
           <div class="input-group input-group-outline my-3">
-            <input name="email" placeholder="email"
+            <input th:name="|${@securityConfig.userNameParameter()}|"
+                   th:placeholder="|${@securityConfig.userNameParameter()}|"
                    type="email" class="form-control"
                    th:field="*{email}"
                    th:required="true" th:onkeydown="enterToLogin">
           </div>
           <div class="input-group input-group-outline mb-3">
-            <input name="password" placeholder="password"
+            <input th:name="|${@securityConfig.passwordParameter()}|"
+                   th:placeholder="|${@securityConfig.passwordParameter()}|"
                    type="password" class="form-control"
                    th:field="*{password}"
                    th:required="true" th:onkeydown="enterToLogin">
