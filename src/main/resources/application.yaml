@@ -6,6 +6,7 @@ spring:
       ddl-auto: none
   messages:
     basename: messages
+
 jipsa:
   security:
     jwt:
@@ -19,3 +20,6 @@ server:
       enabled: true
       force-response: true
       force-request: true
+springdoc:
+  api-docs:
+    path: /v3/api-docs

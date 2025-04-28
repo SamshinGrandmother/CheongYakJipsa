@@ -42,17 +42,18 @@ public class SecurityConfig {
     http
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
       .csrf(AbstractHttpConfigurer::disable)
-            .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
-                            .usernameParameter(USERNAME_PARAMETER_NAME)
-                            .passwordParameter(PASSWORD_PARAMETER_NAME)
-                            .loginPage(LOGIN_URL)
-                            .securityContextRepository(securityContextRepository)
-                            .failureHandler(failureHandler)
-                            .successHandler(successHandler)
-                            .loginProcessingUrl(LOGIN_URL)
-                    )
+      .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+        .usernameParameter(USERNAME_PARAMETER_NAME)
+        .passwordParameter(PASSWORD_PARAMETER_NAME)
+        .loginPage(LOGIN_URL)
+        .securityContextRepository(securityContextRepository)
+        .failureHandler(failureHandler)
+        .successHandler(successHandler)
+        .loginProcessingUrl(LOGIN_URL)
+      )
       .authorizeHttpRequests(authorize -> authorize
-        .requestMatchers(LOGIN_URL, "/", "/bootstrap/**", "/pages/**", "/signup").permitAll()
+        .requestMatchers(LOGIN_URL, "/", "/bootstrap/**", "/pages/**", "/signup", "/swagger-ui/**",
+          "/v3/api-docs/**").permitAll()
         .requestMatchers(HttpMethod.POST, "/members").permitAll()
         .requestMatchers("/**")
         .authenticated())
