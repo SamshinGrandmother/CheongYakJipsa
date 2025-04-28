@@ -6,13 +6,6 @@ spring:
       ddl-auto: none
   messages:
     basename: messages
-
-jipsa:
-  security:
-    jwt:
-      secret-key: test1234test1234test1234test1234
-      minute: 10
-      algorithm: hs256
 server:
   servlet:
     encoding:
