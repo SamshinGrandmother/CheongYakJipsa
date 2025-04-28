@@ -1,0 +1,46 @@
+name: ✨ Feature Request
+description: 새로운 기능을 제안해주세요
+labels: [type: feature]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        새로운 기능 제안 감사합니다! 아래 항목들을 작성해서 아이디어를 구체화해주세요.
+
+  - type: input
+    id: title
+    attributes:
+      label: 기능 이름 또는 제목
+      placeholder: 예) 아파트 검색 필터 기능 추가
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: 왜 필요한가요? (문제 정의 또는 동기)
+      description: 이 기능이 왜 필요한지, 어떤 문제를 해결하려는 건지 설명해주세요.
+      placeholder: |
+        사용자가 많은 청약 정보를 효율적으로 필터링하지 못해서 검색에 어려움이 있음
+
+  - type: textarea
+    id: specification
+    attributes:
+      label: 기능 명세 (무엇을 어떻게 만들 것인가)
+      description: 예상하는 동작, 입력/출력, UI 요소, 제약사항 등을 구체적으로 작성해주세요.
+      placeholder: |
+        - 조건: 지역, 평수, 분양가, 청약일 기준 필터
+        - UI: 검색바 + 필터 드롭다운
+        - 동작: 서버에서 조건 기반 조회 API 호출
+
+  - type: textarea
+    id: alternative
+    attributes:
+      label: 고려했던 다른 방법
+      description: 다른 아이디어나 해결방법이 있었나요?
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 추가 정보
+      description: 참고할 자료, 이미지, 링크 등
