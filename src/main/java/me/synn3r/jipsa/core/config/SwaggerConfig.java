@@ -28,7 +28,7 @@ public class SwaggerConfig {
     return new Info()
       .title("청약집사 Swagger")
       .description("청약집사 유저, 알림 등에 관한 REST API")
-      .version("1.0.0");
+      .version("0.0.1");
   }
 
 }
