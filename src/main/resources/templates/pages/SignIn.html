@@ -2,9 +2,6 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/Body.html}">
-<head>
-  <script type="text/javascript" th:src="@{/pages/SignIn.js}"></script>
-</head>
 <div layout:fragment="content" class="row">
   <div class="col-lg-4 col-md-8 col-12 mx-auto">
     <div class="card z-index-0 fadeIn3 fadeInBottom">
@@ -18,7 +15,7 @@
               </a>
             </div>
             <div class="col-2 text-center px-1">
-              <a class="btn btn-link px-3">
+              <a class="btn btn-link px-3" >
                 <i class="fa fa-github text-white text-lg"></i>
               </a>
             </div>
@@ -31,30 +28,29 @@
         </div>
       </div>
       <div class="card-body">
-        <div th:if="${reason != null}"
-             class="fade show alert alert-danger alert-dismissible text-white" role="alert">
+        <div th:if="${reason != null}" class="fade show alert alert-danger alert-dismissible text-white" role="alert">
           <span class="text-sm" th:text="#{${reason}}"></span>
-          <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert"
-                  aria-label="Close">
+          <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form id="loginForm" role="form" class="text-start" action="/login" method="POST"
-              th:object="${loginForm}">
+        <form id="loginForm" role="form" class="text-start" th:action="|${@securityConfig.loginUrl()}|" method="POST" th:object="${loginForm}" >
           <div class="input-group input-group-outline my-3">
-            <input name="email" placeholder="email"
+            <input th:name="|${@securityConfig.userNameParameter()}|"
+                   th:placeholder="|${@securityConfig.userNameParameter()}|"
                    type="email" class="form-control"
                    th:field="*{email}"
                    th:required="true" th:onkeydown="enterToLogin">
           </div>
           <div class="input-group input-group-outline mb-3">
-            <input name="password" placeholder="password"
+            <input th:name="|${@securityConfig.passwordParameter()}|"
+                   th:placeholder="|${@securityConfig.passwordParameter()}|"
                    type="password" class="form-control"
                    th:field="*{password}"
                    th:required="true" th:onkeydown="enterToLogin">
           </div>
           <div class="form-check form-switch d-flex align-items-center mb-3">
-            <input class="form-check-input" type="checkbox" id="rememberMe" checked>
+            <input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe">
             <label class="form-check-label mb-0 ms-3" for="rememberMe">자동 로그인</label>
           </div>
           <div class="text-center">
@@ -66,8 +62,7 @@
           </p>
           <p class="mt-4 text-sm text-center">
             계정을 잊었다면?
-            <a href="" class="text-primary text-gradient font-weight-bold">Email 찾기</a> or <a
-              href="" class="text-primary text-gradient font-weight-bold">비밀번호 찾기</a>
+            <a href="" class="text-primary text-gradient font-weight-bold">Email 찾기</a> or <a href="" class="text-primary text-gradient font-weight-bold">비밀번호 찾기</a>
           </p>
         </form>
       </div>
@@ -75,3 +70,6 @@
   </div>
 </div>
 
+<head>
+  <script type="text/javascript" th:src="@{/pages/SignIn.js}"></script>
+</head>

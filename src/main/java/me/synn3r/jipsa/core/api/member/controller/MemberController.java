@@ -1,5 +1,6 @@
 package me.synn3r.jipsa.core.api.member.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import me.synn3r.jipsa.core.api.base.domain.Request.Insert;
 import me.synn3r.jipsa.core.api.base.domain.Request.Update;
@@ -29,16 +30,19 @@ public class MemberController {
   }
 
   @GetMapping("/members")
+  @Operation(summary = "사용자 전체 조회", description = "검색한 사용자를 조회할 수 있는 API")
   public List<MemberResponse> getMembers(MemberSearchCondition condition) {
     return memberService.findMembers(condition);
   }
 
   @GetMapping("/members/{id}")
+  @Operation(summary = "사용자 조회", description = "한명의 사용자를 조회할 수 있는 API")
   public MemberResponse getMember(@PathVariable long id) {
     return memberService.findMember(id);
   }
 
   @PostMapping("/members")
+  @Operation(summary = "회원가입", description = "회원가입용 사용자 save API")
   public ResponseEntity<Long> saveMember(
     @Validated({Insert.class}) MemberRequest memberRequest) {
     return ResponseEntity.ok().body(memberService.saveMember(memberRequest));

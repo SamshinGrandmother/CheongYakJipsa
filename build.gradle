@@ -27,7 +27,6 @@ ext {
     set('lombokVersion', "1.18.32")
     set('mapstructVersion', "1.5.5.Final")
     set('mockitoVersion', "5.12.0")
-    set('jwtVersion', "9.42")
     set('thymeleafExtraVersion', "3.1.2.RELEASE")
     set('thymeleafLayoutVersion', "2.5.3")
 }
@@ -44,13 +43,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation "com.nimbusds:nimbus-jose-jwt:${jwtVersion}"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
     implementation "com.querydsl:querydsl-core:${querydslVersion}"
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.5.2'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
     annotationProcessor(
             "org.springframework.boot:spring-boot-configuration-processor",
             "com.querydsl:querydsl-apt:${querydslVersion}:jakarta",

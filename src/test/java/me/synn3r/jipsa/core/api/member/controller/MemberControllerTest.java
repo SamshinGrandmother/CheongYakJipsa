@@ -33,11 +33,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @WebMvcTest(controllers = MemberController.class,
   includeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = TestSecurityConfig.class))
+@Import(TestSecurityConfig.class)
 @DisplayName("사용자 Rest API 테스트")
 class MemberControllerTest extends MemberTestSupport {
 
@@ -92,27 +96,29 @@ class MemberControllerTest extends MemberTestSupport {
   @Test
   @DisplayName("사용자 추가 Request Body 맵핑 테스트")
   void saveMemberTest() throws Exception {
-    Map<String, Object> jsonObject = new HashMap<>();
-    jsonObject.put("name", "테스트123");
-    jsonObject.put("email", "abc123@gmail.com");
-    jsonObject.put("password", "Jipsa2025!");
-    jsonObject.put("passwordConfirm", "Jipsa2025!");
-    jsonObject.put("role", Role.ADMIN.name());
-    mockMvc
-      .perform(post("/members")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(jsonObject)))
+
+    MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+    formData.add("name", "테스트123");
+    formData.add("email", "abc123@gmail.com");
+    formData.add("password", "Jipsa2025!");
+    formData.add("passwordConfirm", "Jipsa2025!");
+    formData.add("role", "ADMIN");
+    formData.add("phoneNumber", "010-9109-8751");
+
+    mockMvc.perform(post("/members")
+        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        .params(formData))
       .andExpect(status().isOk());
 
     verify(memberService, atMost(1))
       .saveMember(assertArg(memberRequest -> {
-        assertEquals(memberRequest.getName(), jsonObject.get("name"));
-        assertEquals(memberRequest.getEmail(), jsonObject.get("email"));
-        assertEquals(memberRequest.getPassword(), jsonObject.get("password"));
-        assertEquals(memberRequest.getPasswordConfirm(), jsonObject.get("passwordConfirm"));
+        assertEquals("테스트123", memberRequest.getName());
+        assertEquals("abc123@gmail.com", memberRequest.getEmail());
+        assertEquals("Jipsa2025!", memberRequest.getPassword());
+        assertEquals("Jipsa2025!", memberRequest.getPasswordConfirm());
+        assertEquals(Role.ADMIN, memberRequest.getRole());
       }));
   }
-
 
   @Test
   @DisplayName("사용자 추가 시 이름 없으면 응답코드 400으로 반환")
@@ -168,10 +174,10 @@ class MemberControllerTest extends MemberTestSupport {
     jsonObject.put("email", "abc123@gmail.com");
     jsonObject.put("passwordConfirm", "test123!");
     mockMvc
-            .perform(post("/members")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(jsonObject)))
-            .andExpect(status().isBadRequest());
+      .perform(post("/members")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(jsonObject)))
+      .andExpect(status().isBadRequest());
   }
 
 
@@ -201,28 +207,32 @@ class MemberControllerTest extends MemberTestSupport {
     jsonObject.put("passwordConfirm", "Jipsa2025!!");
     jsonObject.put("role", Role.NORMAL.name());
     mockMvc
-            .perform(post("/members")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(jsonObject)))
-            .andExpect(jsonPath("$.message").value(Matchers.containsString("비밀번호가 일치하지 않습니다.")));
+      .perform(post("/members")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(jsonObject)))
+      .andExpect(jsonPath("$.message").value(Matchers.containsString("비밀번호가 일치하지 않습니다.")));
   }
 
   @Test
   @DisplayName("사용자 추가 시 비밀번호 복잡도 검증")
   void saveMemberCheckPasswordComplexValidationTest() throws Exception {
-    Map<String, Object> jsonObject = new HashMap<>();
-    jsonObject.put("name", "테스트123");
-    jsonObject.put("email", "abc123@gmail.com");
-    jsonObject.put("password", "test123");
-    jsonObject.put("passwordConfirm", "test123");
-    jsonObject.put("role", Role.NORMAL.name());
-    mockMvc
-            .perform(post("/members")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(jsonObject)))
-            .andExpect(jsonPath("$.message").value(Matchers.containsString("비밀번호는 대/소문자, 숫자, 특수문자 포함 8글자 이상이어야 합니다.")));
-  }
 
+    MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+    formData.add("name", "테스트123");
+    formData.add("email", "abc123@gmail.com");
+    formData.add("password", "test");
+    formData.add("passwordConfirm", "test");
+    formData.add("role", Role.NORMAL.name());
+    formData.add("phoneNumber", "010-9109-8751");
+
+    mockMvc
+      .perform(post("/members")
+        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        .params(formData))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.message").value(
+        Matchers.containsString("비밀번호는 대/소문자, 숫자, 특수문자 포함 8글자 이상이어야 합니다.")));
+  }
 
 
   @Test
