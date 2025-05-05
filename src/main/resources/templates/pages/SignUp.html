@@ -20,7 +20,7 @@
             <p class="mb-0">Enter your email and password to register</p>
           </div>
           <div class="card-body">
-            <form role="form" th:object="${signupForm}" method="POST" action="/members">
+            <form role="form" th:object="${signupForm}" th:action="|${@securityConfig.saveMemberApi()}|" method="POST">
               <div class="input-group input-group-outline mb-3">
                 <input type="text" class="form-control" th:field="*{name}" placeholder="name">
                 <input type="hidden" th:field="*{role}"/>
