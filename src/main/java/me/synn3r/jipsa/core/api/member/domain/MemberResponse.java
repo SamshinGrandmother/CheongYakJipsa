@@ -13,5 +13,6 @@ public class MemberResponse implements Response {
   private String name;
   private Role role;
   private String email;
+  private String phoneNumber;
 
 }
