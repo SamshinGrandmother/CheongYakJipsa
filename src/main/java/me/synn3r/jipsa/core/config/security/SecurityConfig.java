@@ -44,6 +44,11 @@ public class SecurityConfig {
   }
 
   @Bean
+  public String saveMemberApi() {
+    return "/members";
+  }
+
+  @Bean
   public RequestMatcher loginAntMatcher() {
     return new AntPathRequestMatcher(loginUrl(), HttpMethod.POST.name());
   }
@@ -69,6 +74,7 @@ public class SecurityConfig {
         .requestMatchers(loginUrl(), "/", "/bootstrap/**", "/pages/**", "/signup", "/swagger-ui/**",
           "/v3/api-docs/**")
         .permitAll()
+        .requestMatchers(HttpMethod.POST, saveMemberApi()).permitAll()
         .requestMatchers("/**")
         .authenticated())
       .logout(customize -> customize

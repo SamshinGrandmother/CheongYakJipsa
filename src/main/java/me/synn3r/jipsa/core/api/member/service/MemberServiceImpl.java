@@ -63,7 +63,10 @@ public class MemberServiceImpl implements MemberService, AuthenticationSuccessLo
   public void updateMember(MemberRequest memberRequest) {
     Member member = memberRepository.findById(memberRequest.getId())
       .orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다. "));
-    member.update(memberRequest.getName());
+
+    memberRequest.setPassword(passwordEncoder.encode(memberRequest.getPassword()));
+    member.updateMemberInfo(memberRequest);
+
   }
 
   @Override
