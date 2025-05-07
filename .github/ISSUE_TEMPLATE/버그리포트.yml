@@ -1,0 +1,58 @@
+name: 🐞 Bug Report
+description: 애플리케이션에서 발생한 버그를 제보해주세요
+labels: [type: bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        버그 제보 감사합니다! 가능한 정확히 재현할 수 있도록 아래 항목을 상세하게 작성해주세요.
+
+  - type: input
+    id: title
+    attributes:
+      label: 버그 제목
+      description: 간단하게 어떤 문제가 있었는지 요약해주세요.
+      placeholder: 예) 로그인 시 500 에러 발생
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 재현 절차 (Steps to Reproduce)
+      description: 버그를 재현할 수 있는 단계를 하나씩 적어주세요.
+      placeholder: |
+        1. 로그인 페이지로 이동
+        2. 아이디와 비밀번호 입력
+        3. 로그인 버튼 클릭
+        4. 500 에러 발생
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 예상 동작
+      description: 원래 기대했던 동작은 무엇인가요?
+      placeholder: 예) 로그인 성공 후 대시보드로 이동
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 실제 동작
+      description: 실제로 발생한 문제는 무엇인가요?
+      placeholder: 예) 500 에러와 함께 흰 화면이 나타남
+
+  - type: input
+    id: env
+    attributes:
+      label: 환경 정보
+      description: 어떤 브라우저/OS/기기에서 발생했는지 알려주세요.
+      placeholder: 예) Chrome 123.0.0 / macOS 14.3.1
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 에러 로그 (선택)
+      description: 관련된 콘솔 또는 서버 로그가 있다면 붙여주세요.
+      render: shell

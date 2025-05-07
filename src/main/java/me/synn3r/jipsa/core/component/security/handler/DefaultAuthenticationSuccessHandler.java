@@ -8,10 +8,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Component
 public class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
   private final AuthenticationSuccessLogger authenticationSuccessLogger;
+  private final static String AUTHENTICATION_SUCCESS_FORWARD_URL = "/calendar";
 
   public DefaultAuthenticationSuccessHandler(
     AuthenticationSuccessLogger authenticationSuccessLogger) {
@@ -20,9 +23,10 @@ public class DefaultAuthenticationSuccessHandler implements AuthenticationSucces
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-    Authentication authentication) {
+    Authentication authentication) throws IOException {
     authenticationSuccessLogger.saveAuthenticationSuccessHistory(
       (UserDetails) authentication.getPrincipal());
+    response.sendRedirect(AUTHENTICATION_SUCCESS_FORWARD_URL);
 
   }
 }

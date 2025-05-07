@@ -4,14 +4,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-
-
-jipsa:
-  security:
-    jwt:
-      secret-key: test1234test1234test1234test1234
-      minute: 10
-      algorithm: hs256
+  messages:
+    basename: messages
 server:
   servlet:
     encoding:
@@ -19,7 +13,9 @@ server:
       enabled: true
       force-response: true
       force-request: true
-
 jasypt:
   encryptor:
     password: ${JASYPT_KEY:g22PKJqfCnc-4fQ.}
+springdoc:
+  api-docs:
+    path: /v3/api-docs

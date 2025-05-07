@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/Body.html}">
+<div layout:fragment="content" class="row">
+  <div class="col-lg-4 col-md-8 col-12 mx-auto">
+    <div class="card z-index-0 fadeIn3 fadeInBottom">
+      <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+        <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
+          <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Login</h4>
+          <div class="row mt-3">
+            <div class="col-2 text-center ms-auto">
+              <a class="btn btn-link px-3">
+                <i class="fa fa-facebook text-white text-lg"></i>
+              </a>
+            </div>
+            <div class="col-2 text-center px-1">
+              <a class="btn btn-link px-3" >
+                <i class="fa fa-github text-white text-lg"></i>
+              </a>
+            </div>
+            <div class="col-2 text-center me-auto">
+              <a class="btn btn-link px-3">
+                <i class="fa fa-google text-white text-lg"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div th:if="${reason != null}" class="fade show alert alert-danger alert-dismissible text-white" role="alert">
+          <span class="text-sm" th:text="#{${reason}}"></span>
+          <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="loginForm" role="form" class="text-start" th:action="|${@securityConfig.loginUrl()}|" method="POST" th:object="${loginForm}" >
+          <div class="input-group input-group-outline my-3">
+            <input th:name="|${@securityConfig.userNameParameter()}|"
+                   th:placeholder="|${@securityConfig.userNameParameter()}|"
+                   type="email" class="form-control"
+                   th:field="*{email}"
+                   th:required="true" th:onkeydown="enterToLogin">
+          </div>
+          <div class="input-group input-group-outline mb-3">
+            <input th:name="|${@securityConfig.passwordParameter()}|"
+                   th:placeholder="|${@securityConfig.passwordParameter()}|"
+                   type="password" class="form-control"
+                   th:field="*{password}"
+                   th:required="true" th:onkeydown="enterToLogin">
+          </div>
+          <div class="form-check form-switch d-flex align-items-center mb-3">
+            <input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe">
+            <label class="form-check-label mb-0 ms-3" for="rememberMe">자동 로그인</label>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">로그인</button>
+          </div>
+          <p class="mt-4 text-sm text-center">
+            계정이 없다면?
+            <a href="/signup" class="text-primary text-gradient font-weight-bold">회원가입</a>
+          </p>
+          <p class="mt-4 text-sm text-center">
+            계정을 잊었다면?
+            <a href="" class="text-primary text-gradient font-weight-bold">Email 찾기</a> or <a href="" class="text-primary text-gradient font-weight-bold">비밀번호 찾기</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<head>
+  <script type="text/javascript" th:src="@{/pages/SignIn.js}"></script>
+</head>

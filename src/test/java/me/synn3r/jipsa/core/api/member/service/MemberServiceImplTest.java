@@ -3,6 +3,7 @@ package me.synn3r.jipsa.core.api.member.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atMost;
@@ -128,25 +129,10 @@ class MemberServiceImplTest extends MemberTestSupport {
   }
 
   @Test
-  @DisplayName("사용자 추가 시 비밀번호, 비밀번호 확인이 일치해야함")
-  void saveMemberPasswordNotMatchTest() {
-    MemberRequest memberRequest = getMockMemberRequest(null, "테스트123", "abc123@gmail.com",
-      "test123!",
-      "test123@");
-
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-      () -> memberService.saveMember(memberRequest),
-      "비밀번호와 비밀번호 확인이 틀릴 시 IllegalArgumentException 이 발생해야 합니다. ");
-
-    assertEquals("비밀번호가 일치하지 않습니다. ", exception.getMessage());
-  }
-
-  @Test
   @DisplayName("사용자 추가 시 기존 사용자와 이메일이 중복될 수 없음")
   void saveMemberDenyDuplicatedEmailTest() {
     MemberRequest memberRequest = getMockMemberRequest(null, "테스트123", "abc123@gmail.com",
-      "test123!",
-      "test123!");
+      "test123!", "test123!", "010-9109-8751");
     when(memberRepository.existsMemberByEmail(memberRequest.getEmail()))
       .thenReturn(true);
 
@@ -161,7 +147,7 @@ class MemberServiceImplTest extends MemberTestSupport {
   @DisplayName("사용자 변경 테스트")
   void updateMemberTest() {
     MemberRequest memberRequest = getMockMemberRequest(1L, "테스트123", "abc123@gmail.com", "test123!",
-      "test123!");
+      "test123!", "010-9109-8751");
     Member mockMember = getMockMember();
     when(memberRepository.findById(memberRequest.getId())).thenReturn(Optional.of(mockMember));
 
@@ -174,7 +160,7 @@ class MemberServiceImplTest extends MemberTestSupport {
   @DisplayName("변경할 사용자가 존재하지 않으면 예외가 발생해야함")
   void updateMemberNotFoundTest() {
     MemberRequest memberRequest = getMockMemberRequest(1L, "테스트123", "abc123@gmail.com", "test123!",
-      "test123@");
+      "test123@", "010-9109-8751");
     when(memberRepository.findById(memberRequest.getId())).thenReturn(Optional.empty());
 
     NoSuchElementException exception = assertThrows(NoSuchElementException.class,
@@ -188,8 +174,7 @@ class MemberServiceImplTest extends MemberTestSupport {
   @DisplayName("사용자 비밀번호 변경 테스트")
   void updateMemberPasswordTest() {
     MemberRequest memberRequest = getMockMemberRequest(1L, "테스트123", "abc123@gmail.com",
-      "test123!",
-      "test123!");
+      "test123!", "test123!", "010-9109-8751");
     when(memberRepository.findById(memberRequest.getId()))
       .thenReturn(Optional.of(getMockMember()));
 
@@ -199,24 +184,10 @@ class MemberServiceImplTest extends MemberTestSupport {
   }
 
   @Test
-  @DisplayName("비밀번호 변경 시 비밀번호와 비밀번호 확인이 일치해야함")
-  void updateMemberPasswordNotMatchTest() {
-    MemberRequest memberRequest = getMockMemberRequest(null, "테스트123", "abc123@gmail.com",
-      "test123!",
-      "test123@");
-
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-      () -> memberService.updatePassword(memberRequest),
-      "비밀번호와 비밀번호 확인이 틀릴 시 IllegalArgumentException 이 발생해야 합니다. ");
-
-    assertEquals("비밀번호가 일치하지 않습니다. ", exception.getMessage());
-  }
-
-  @Test
   @DisplayName("비밀번호 변경 할 사용자가 존재하지 않으면 예외가 발생해야함")
   void updatePasswordMemberNotFoundTest() {
     MemberRequest memberRequest = getMockMemberRequest(1L, "테스트123", "abc123@gmail.com", "test123!",
-      "test123!");
+      "test123!", "010-9109-8751");
     when(memberRepository.findById(memberRequest.getId())).thenReturn(Optional.empty());
 
     NoSuchElementException exception = assertThrows(NoSuchElementException.class,

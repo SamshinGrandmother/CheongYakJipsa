@@ -1,79 +1,94 @@
 package me.synn3r.jipsa.core.config.security;
 
 import lombok.RequiredArgsConstructor;
-import me.synn3r.jipsa.core.component.security.DefaultSecurityContextRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.filter.GenericFilterBean;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-  private final String USERNAME_PARAMETER_NAME = "email";
-  private final String PASSWORD_PARAMETER_NAME = "password";
-  private final DefaultSecurityContextRepository securityContextRepository;
   private final AuthenticationSuccessHandler successHandler;
   private final AuthenticationFailureHandler failureHandler;
-  private final AuthenticationManager authenticationManager;
-  private final String LOGIN_METHOD = HttpMethod.POST.name();
-  private final String LOGIN_URL = "/login";
-
 
   @Bean
-  public GenericFilterBean loginFilter() {
-    UsernamePasswordAuthenticationFilter loginFilter = new UsernamePasswordAuthenticationFilter();
-    loginFilter.setAuthenticationSuccessHandler(successHandler);
-    loginFilter.setAuthenticationFailureHandler(failureHandler);
-    loginFilter.setSecurityContextRepository(securityContextRepository);
-    loginFilter.setAuthenticationManager(authenticationManager);
-    loginFilter.setUsernameParameter(USERNAME_PARAMETER_NAME);
-    loginFilter.setPasswordParameter(PASSWORD_PARAMETER_NAME);
-    return loginFilter;
+  public String userNameParameter() {
+    return "email";
   }
 
-  @Bean(name = "loginAntMatcher")
+  @Bean
+  public String passwordParameter() {
+    return "password";
+  }
+
+  @Bean
+  public String loginUrl() {
+    return "/login";
+  }
+
+  @Bean
+  public String logoutUrl() {
+    return "/logout";
+  }
+
+  @Bean
+  public String saveMemberApi() {
+    return "/members";
+  }
+
+  @Bean
   public RequestMatcher loginAntMatcher() {
-    return new AntPathRequestMatcher(LOGIN_URL, LOGIN_METHOD);
+    return new AntPathRequestMatcher(loginUrl(), HttpMethod.POST.name());
+  }
+
+  @Bean
+  public RequestMatcher logoutMatcher() {
+    return new AntPathRequestMatcher(logoutUrl(), HttpMethod.GET.name());
   }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-      .csrf(AbstractHttpConfigurer::disable)
-      .addFilterBefore(loginFilter(),
-        UsernamePasswordAuthenticationFilter.class)
+      .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+        .usernameParameter(userNameParameter())
+        .passwordParameter(passwordParameter())
+        .loginPage(loginUrl())
+        .failureHandler(failureHandler)
+        .successHandler(successHandler)
+        .loginProcessingUrl(loginUrl())
+      )
       .authorizeHttpRequests(authorize -> authorize
-        .requestMatchers(LOGIN_URL, "/", "/bootstrap/**", "/pages/**")
+        .requestMatchers(loginUrl(), "/", "/bootstrap/**", "/pages/**", "/signup", "/swagger-ui/**",
+          "/v3/api-docs/**")
         .permitAll()
+        .requestMatchers(HttpMethod.POST, saveMemberApi()).permitAll()
         .requestMatchers("/**")
         .authenticated())
-      .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .securityContext(
-        configurer -> configurer.
-          securityContextRepository(securityContextRepository))
-      .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin));
+      .logout(customize -> customize
+        .logoutRequestMatcher(logoutMatcher())
+        .logoutSuccessUrl(loginUrl()))
+      .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
+      .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
+        .rememberMeParameter("rememberMe")
+        .tokenValiditySeconds(3600))
+    ;
 
     return http.build();
   }
+
 
   @Bean
   public CorsFilter corsFilter() {
