@@ -62,16 +62,34 @@
                 <input type="hidden" th:field="*{id}"/>
                 <ul class="list-group">
                   <li class="list-group-item border-0 ps-0 text-sm">
-                    <strong class="text-dark">이메일 :</strong>
-                    <input type="email" disabled  class="form-control form-control-sm d-inline w-auto" name="email" th:field="*{email}">
-                  </li>
-                  <li class="list-group-item border-0 ps-0 pt-0 text-sm">
-                    <strong class="text-dark">이름 :</strong>
-                    <input type="text" disabled class="form-control form-control-sm d-inline w-auto" name="name" th:field="*{name}">
+                    <div class="row">
+                      <div class="col-3 d-flex justify-content-end align-items-center ">
+                        <strong class="text-dark">이메일 :</strong>
+                      </div>
+                      <div class="col-9">
+                        <input type="email" disabled class="form-control form-control-sm" name="email" th:field="*{email}">
+                      </div>
+                    </div>
                   </li>
                   <li class="list-group-item border-0 ps-0 text-sm">
-                    <strong class="text-dark">번호 :</strong>
-                    <input type="text" disabled class="form-control form-control-sm d-inline w-auto" name="mobile" th:field="*{phoneNumber}">
+                    <div class="row">
+                      <div class="col-3 d-flex justify-content-end align-items-center ">
+                        <strong class="text-dark">이름 :</strong>
+                      </div>
+                      <div class="col-9">
+                        <input type="text" disabled class="form-control form-control-sm" name="name" th:field="*{name}">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item border-0 ps-0 text-sm">
+                    <div class="row">
+                      <div class="col-3 d-flex justify-content-end align-items-center ">
+                        <strong class="text-dark">번호 :</strong>
+                      </div>
+                      <div class="col-9">
+                        <input type="text" disabled class="form-control form-control-sm" name="mobile" th:field="*{phoneNumber}">
+                      </div>
+                    </div>
                   </li>
                   <li id="password-li" class="list-group-item border-0 ps-0 text-sm" style="display:none">
                     <strong class="text-dark">비밀번호 :</strong>
