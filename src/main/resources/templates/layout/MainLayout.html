@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>청약집사</title>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
+    <!-- Nucleo Icons -->
+    <link href="/bootstrap/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="/bootstrap/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <!-- Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <!-- CSS Files -->
+    <link id="pagestyle" href="/bootstrap/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="g-sidenav-show bg-gray-100">
+<th:block th:replace="layout/MainBody::body"></th:block>
+<script src="/bootstrap/js/core/popper.min.js"></script>
+<script src="/bootstrap/js/core/bootstrap.min.js"></script>
+<script src="/bootstrap/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="/bootstrap/js/plugins/smooth-scrollbar.min.js"></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="/bootstrap/js/material-dashboard.min.js?v=3.2.0"></script>
+<script>
+    $(document).ajaxSend(function(e, xhr) {
+        const token = $('meta[name="_csrf"]').attr('content');
+        const header = $('meta[name="_csrf_header"]').attr('content');
+
+        if (token && header) {
+            xhr.setRequestHeader(header, token);
+        }
+    });
+</script>
+</body>
+</html>

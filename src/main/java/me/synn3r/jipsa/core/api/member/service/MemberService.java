@@ -19,4 +19,6 @@ public interface MemberService {
   void updatePassword(MemberRequest memberRequest);
 
   void deleteMember(long id);
+
+  MemberResponse findMemberByEmail(String email);
 }

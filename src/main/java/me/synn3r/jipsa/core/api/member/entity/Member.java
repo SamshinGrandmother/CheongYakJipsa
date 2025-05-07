@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.synn3r.jipsa.core.api.base.entity.BaseEntity;
 import me.synn3r.jipsa.core.api.base.enumeration.DeleteType;
+import me.synn3r.jipsa.core.api.member.domain.MemberRequest;
 import me.synn3r.jipsa.core.component.security.Role;
 
 @Entity
@@ -63,4 +64,10 @@ public class Member extends BaseEntity {
     deleteType = DeleteType.DELETE;
   }
 
+  public void updateMemberInfo(MemberRequest memberRequest) {
+    this.name = memberRequest.getName();
+    this.password = memberRequest.getPassword();
+    this.phoneNumber = memberRequest.getPhoneNumber();
+    this.password = memberRequest.getPassword();
+  }
 }
