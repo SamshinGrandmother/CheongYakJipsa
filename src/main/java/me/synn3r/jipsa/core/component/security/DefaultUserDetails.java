@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class DefaultUserDetails implements UserDetails {
 
   private long id;
+  private String userId;
   private String email;
   private String name;
   private String password;
@@ -25,11 +26,12 @@ public class DefaultUserDetails implements UserDetails {
 
   @Override
   public String getUsername() {
-    return email;
+    return userId;
   }
 
-  public DefaultUserDetails(long id, String email, String name, String password, Role role) {
+  public DefaultUserDetails(long id, String userId, String email, String name, String password, Role role) {
     this.id = id;
+    this.userId = userId;
     this.email = email;
     this.name = name;
     this.password = password;

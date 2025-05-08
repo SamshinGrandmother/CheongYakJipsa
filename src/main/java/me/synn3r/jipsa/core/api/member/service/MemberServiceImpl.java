@@ -85,22 +85,22 @@ public class MemberServiceImpl implements MemberService, AuthenticationSuccessLo
   }
 
   @Override
-  public MemberResponse findMemberByEmail(String email) {
-    return memberMapper.toMemberResponse(memberRepository.findByEmail(email));
+  public MemberResponse findMemberByUserId(String userId) {
+    return memberMapper.toMemberResponse(memberRepository.findByUserId(userId));
   }
 
   @Override
   @Transactional
   public void saveAuthenticationFailureHistory(String username,
     AuthenticationFailureType authenticationFailureType) {
-    Member member = memberRepository.findByEmail(username);
+    Member member = memberRepository.findByUserId(username);
     memberAccessService.saveMemberAccessFailureHistory(member, authenticationFailureType);
   }
 
   @Override
   @Transactional
   public void saveAuthenticationSuccessHistory(UserDetails userDetails) {
-    Member member = memberRepository.findByEmail(userDetails.getUsername());
+    Member member = memberRepository.findByUserId(userDetails.getUsername());
     memberAccessService.saveMemberAccessHistory(member);
   }
 }

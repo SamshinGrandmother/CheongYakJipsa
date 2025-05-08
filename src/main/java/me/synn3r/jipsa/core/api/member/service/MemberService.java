@@ -20,5 +20,5 @@ public interface MemberService {
 
   void deleteMember(long id);
 
-  MemberResponse findMemberByEmail(String email);
+  MemberResponse findMemberByUserId(String username);
 }

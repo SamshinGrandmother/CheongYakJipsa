@@ -37,9 +37,9 @@
         <form id="loginForm" role="form" class="text-start" th:action="|${@securityConfig.loginUrl()}|" method="POST" th:object="${loginForm}" >
           <div class="input-group input-group-outline my-3">
             <input th:name="|${@securityConfig.userNameParameter()}|"
-                   th:placeholder="|${@securityConfig.userNameParameter()}|"
-                   type="email" class="form-control"
-                   th:field="*{email}"
+                   th:placeholder="id"
+                   type="text" class="form-control"
+                   th:field="*{userId}"
                    th:required="true" th:onkeydown="enterToLogin">
           </div>
           <div class="input-group input-group-outline mb-3">

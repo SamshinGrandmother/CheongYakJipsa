@@ -25,7 +25,7 @@ public class SecurityConfig {
 
   @Bean
   public String userNameParameter() {
-    return "email";
+    return "userId";
   }
 
   @Bean
