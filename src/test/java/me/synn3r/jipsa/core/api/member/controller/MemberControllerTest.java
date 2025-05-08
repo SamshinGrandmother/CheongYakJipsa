@@ -99,6 +99,7 @@ class MemberControllerTest extends MemberTestSupport {
 
     MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
     formData.add("name", "테스트123");
+    formData.add("userId", "abc123");
     formData.add("email", "abc123@gmail.com");
     formData.add("password", "Jipsa2025!");
     formData.add("passwordConfirm", "Jipsa2025!");
@@ -113,6 +114,7 @@ class MemberControllerTest extends MemberTestSupport {
     verify(memberService, atMost(1))
       .saveMember(assertArg(memberRequest -> {
         assertEquals("테스트123", memberRequest.getName());
+        assertEquals("abc123", memberRequest.getUserId());
         assertEquals("abc123@gmail.com", memberRequest.getEmail());
         assertEquals("Jipsa2025!", memberRequest.getPassword());
         assertEquals("Jipsa2025!", memberRequest.getPasswordConfirm());
@@ -242,8 +244,7 @@ class MemberControllerTest extends MemberTestSupport {
     jsonObject.put("id", 1L);
     jsonObject.put("name", "테스트123");
     jsonObject.put("email", "abc123@gmail.com");
-    jsonObject.put("password", "test123!");
-    jsonObject.put("passwordConfirm", "test123!");
+
     mockMvc
       .perform(put("/members")
         .contentType(MediaType.APPLICATION_JSON)
@@ -255,8 +256,6 @@ class MemberControllerTest extends MemberTestSupport {
         assertEquals(memberRequest.getId(), jsonObject.get("id"));
         assertEquals(memberRequest.getName(), jsonObject.get("name"));
         assertEquals(memberRequest.getEmail(), jsonObject.get("email"));
-        assertEquals(memberRequest.getPassword(), jsonObject.get("password"));
-        assertEquals(memberRequest.getPasswordConfirm(), jsonObject.get("passwordConfirm"));
       }));
   }
 

@@ -10,21 +10,21 @@ public abstract class MemberTestSupport {
 
 
   protected Member getMockMember() {
-    return getMockMember(1L, "abc123@gmail.com", "테스트123", null,"010-9109-8751");
+    return getMockMember(1L, "abc123@gmail.com","abc123", "테스트123", null,"010-9109-8751");
   }
 
-  protected Member getMockMember(Long id, String email, String name, String password,String phoneNumber) {
-    return new Member(id, email, name, password, Role.ADMIN,phoneNumber);
+  protected Member getMockMember(Long id, String email, String userId, String name, String password,String phoneNumber) {
+    return new Member(id, email, userId, name, password, Role.ADMIN,phoneNumber);
   }
 
   protected MemberRequest getMockMemberRequest() {
-    return getMockMemberRequest(null, "테스트123", "abc123@gmail.com", "test123!",
+    return getMockMemberRequest(null,  "abc123@gmail.com","abc123", "테스트123", "test123!",
       "test123!","010-9109-8751");
   }
 
-  protected MemberRequest getMockMemberRequest(Long id, String email, String name, String password,
+  protected MemberRequest getMockMemberRequest(Long id, String email, String userId, String name, String password,
     String passwordConfirm,String phoneNumber) {
-    return new MemberRequest(id, email, name, Role.ADMIN, password, passwordConfirm,phoneNumber);
+    return new MemberRequest(id, email, userId, name, Role.ADMIN, password, passwordConfirm,phoneNumber);
   }
 
   protected MemberResponse getMockMemberResponse() {
