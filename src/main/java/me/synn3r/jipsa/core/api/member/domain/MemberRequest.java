@@ -19,7 +19,7 @@ import me.synn3r.jipsa.core.component.security.Role;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@PasswordConfirm(groups = {Insert.class, Update.class, UpdatePassword.class})
+@PasswordConfirm(groups = {Insert.class, UpdatePassword.class})
 public class MemberRequest {
 
   @NotNull(groups = {Update.class, UpdatePassword.class})

@@ -28,7 +28,7 @@ public class Member extends BaseEntity {
   private Long id;
   @NotBlank
   @Email
-  @Column(updatable = false)
+  @Column
   private String email;
   @NotBlank
   private String name;
@@ -65,9 +65,8 @@ public class Member extends BaseEntity {
   }
 
   public void updateMemberInfo(MemberRequest memberRequest) {
+    this.email = memberRequest.getEmail();
     this.name = memberRequest.getName();
-    this.password = memberRequest.getPassword();
     this.phoneNumber = memberRequest.getPhoneNumber();
-    this.password = memberRequest.getPassword();
   }
 }

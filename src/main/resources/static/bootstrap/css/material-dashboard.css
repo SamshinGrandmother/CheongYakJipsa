@@ -23947,6 +23947,10 @@ label,
   border: none;
 }
 
+.form-control.form-control-border {
+  border: 1px solid #d2d6da !important;
+}
+
 .form-control.is-invalid {
   border: 1px solid #d2d6da;
   padding: 0.625rem 0.75rem;

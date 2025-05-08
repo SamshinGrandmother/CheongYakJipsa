@@ -52,15 +52,16 @@ public class MemberController {
   @PutMapping("/members")
   @Operation(summary = "마이 페이지 정보 업데이트", description = "마이 페이지에서 나의 정보 수정하는 API")
   public ResponseEntity<String> updateMember(
-    @Validated({Update.class, UpdatePassword.class}) @RequestBody MemberRequest memberRequest) {
+     @Validated({Update.class})@RequestBody MemberRequest memberRequest) {
     memberService.updateMember(memberRequest);
     return ResponseEntity.ok("success");
   }
 
   @PatchMapping("/members")
-  public void updatePassword(
+  public ResponseEntity<String> updatePassword(
     @Validated({UpdatePassword.class}) @RequestBody MemberRequest memberRequest) {
     memberService.updatePassword(memberRequest);
+    return ResponseEntity.ok("success");
   }
 
   @DeleteMapping("/members/{id}")
