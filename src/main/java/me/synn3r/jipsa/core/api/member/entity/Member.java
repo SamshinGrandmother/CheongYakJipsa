@@ -28,6 +28,7 @@ public class Member extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @NotBlank
+  @Column(updatable = false)
   private String userId;
   @NotBlank
   @Email

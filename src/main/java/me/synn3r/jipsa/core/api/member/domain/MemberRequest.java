@@ -28,7 +28,6 @@ public class MemberRequest {
   private Long id;
 
   @NotEmpty(groups = {Insert.class})
-  @Column(updatable = false)
   private String userId;
 
   @NotEmpty(groups = {Insert.class, Update.class})
