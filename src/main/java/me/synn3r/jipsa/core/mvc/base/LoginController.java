@@ -45,7 +45,7 @@ public class LoginController {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     DefaultUserDetails user = (DefaultUserDetails) authentication.getPrincipal();
 
-    MemberResponse member = memberService.findMemberByEmail(user.getUsername());
+    MemberResponse member = memberService.findMemberByUserId(user.getUsername());
     member.setRole(Role.NORMAL);
     model.addAttribute("profileForm", member);
     return "pages/Profile";

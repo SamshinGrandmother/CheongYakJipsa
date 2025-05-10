@@ -1,5 +1,6 @@
 package me.synn3r.jipsa.core.api.member.domain;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -19,12 +20,15 @@ import me.synn3r.jipsa.core.component.security.Role;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@PasswordConfirm(groups = {Insert.class, Update.class, UpdatePassword.class})
+@PasswordConfirm(groups = {Insert.class, UpdatePassword.class})
 public class MemberRequest {
 
   @NotNull(groups = {Update.class, UpdatePassword.class})
   @Min(value = 1, groups = {Update.class, UpdatePassword.class})
   private Long id;
+
+  @NotEmpty(groups = {Insert.class})
+  private String userId;
 
   @NotEmpty(groups = {Insert.class, Update.class})
   private String name;

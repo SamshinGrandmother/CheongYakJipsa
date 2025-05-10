@@ -49,43 +49,82 @@
                 <div class="col-md-8 d-flex align-items-center">
                   <h6 class="mb-0">기본 정보</h6>
                 </div>
-                <div class="col-md-4 text-end">
-                  <a href="javascript:" id="edit-profile-btn">
-                    <i class="fas fa-user-edit text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Profile"></i>
-                  </a>
-                </div>
               </div>
             </div>
             <div class="card-body p-3">
               <form id="edit-profile" th:object="${profileForm}" >
                 <input type="hidden" th:field="*{role}"/>
-                <input type="hidden" th:field="*{id}"/>
+                <input id="user_pk_id" type="hidden" th:field="*{id}"/>
                 <ul class="list-group">
                   <li class="list-group-item border-0 ps-0 text-sm">
-                    <strong class="text-dark">이메일 :</strong>
-                    <input type="email" disabled  class="form-control form-control-sm d-inline w-auto" name="email" th:field="*{email}">
-                  </li>
-                  <li class="list-group-item border-0 ps-0 pt-0 text-sm">
-                    <strong class="text-dark">이름 :</strong>
-                    <input type="text" disabled class="form-control form-control-sm d-inline w-auto" name="name" th:field="*{name}">
+                    <div class="row">
+                      <div class="col-3 d-flex justify-content-end align-items-center ">
+                        <strong class="text-dark">이메일 :</strong>
+                      </div>
+                      <div class="col-9">
+                        <input type="email" class="form-control form-control-sm form-control-border" name="email" th:field="*{email}">
+                      </div>
+                    </div>
                   </li>
                   <li class="list-group-item border-0 ps-0 text-sm">
-                    <strong class="text-dark">번호 :</strong>
-                    <input type="text" disabled class="form-control form-control-sm d-inline w-auto" name="mobile" th:field="*{phoneNumber}">
+                    <div class="row">
+                      <div class="col-3 d-flex justify-content-end align-items-center ">
+                        <strong class="text-dark">이름 :</strong>
+                      </div>
+                      <div class="col-9">
+                        <input type="text" class="form-control form-control-sm form-control-border" name="name" th:field="*{name}">
+                      </div>
+                    </div>
                   </li>
-                  <li id="password-li" class="list-group-item border-0 ps-0 text-sm" style="display:none">
-                    <strong class="text-dark">비밀번호 :</strong>
-                    <input type="password" class="form-control form-control-sm d-inline w-auto" name="password">
-                  </li>
-                  <li id="password-confirm-li" class="list-group-item border-0 ps-0 text-sm" style="display:none">
-                    <strong class="text-dark">비밀번호 확인 :</strong>
-                    <input type="password" class="form-control form-control-sm d-inline w-auto" name="passwordConfirm">
+                  <li class="list-group-item border-0 ps-0 text-sm">
+                    <div class="row">
+                      <div class="col-3 d-flex justify-content-end align-items-center ">
+                        <strong class="text-dark">번호 :</strong>
+                      </div>
+                      <div class="col-9">
+                        <input type="text" class="form-control form-control-sm form-control-border" name="mobile" th:field="*{phoneNumber}">
+                      </div>
+                    </div>
                   </li>
                 </ul>
                 <div class="d-flex justify-content-end mt-3">
-                  <button type="submit" id="profile-save-button" class="btn btn-primary btn-sm" style="display:none">저장</button>
+                  <button type="submit" id="profile-save-button" class="btn btn-primary btn-sm bg-gradient-dark">저장</button>
                 </div>
               </form>
+            </div>
+            <div class="card-header pb-0 p-3">
+              <div class="row">
+                <div class="col-md-8 d-flex align-items-center">
+                  <h6 class="mb-0">비밀번호 변경</h6>
+                </div>
+              </div>
+              <div class="card-body p-3">
+                <ul class="list-group">
+                  <li class="list-group-item border-0 ps-0 text-sm">
+                    <div class="row">
+                      <div class="col-4 d-flex justify-content-end align-items-center ">
+                        <strong class="text-dark">비밀번호 :</strong>
+                      </div>
+                      <div class="col-8">
+                        <input type="password" class="form-control form-control-sm form-control-border" name="password">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item border-0 ps-0 text-sm">
+                    <div class="row">
+                      <div class="col-4 d-flex justify-content-end align-items-center ">
+                        <strong class="text-dark">비밀번호 확인:</strong>
+                      </div>
+                      <div class="col-8">
+                        <input type="password" class="form-control form-control-sm form-control-border" name="passwordConfirm">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <div class="d-flex justify-content-end mt-3">
+                  <button type="submit" id="password-change-button" class="btn btn-primary btn-sm bg-gradient-dark">저장</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -177,13 +216,6 @@
     }
 
     $(function() {
-      $('#edit-profile-btn').click(function() {
-
-        $('#edit-profile input').not('[name="email"]').prop('disabled', false);
-        $('#edit-profile li').css('display', 'block');
-        $('#profile-save-button').show();
-      });
-
 
       $('#edit-profile').on('submit', function(e) {
         e.preventDefault();
@@ -200,12 +232,6 @@
           success: function(response) {
 
             if(response === "success"){
-              $('#edit-profile input').prop('disabled', true);
-              $('input[name="password"], input[name="passwordConfirm"]').val('');
-              $('#password-li, #password-confirm-li').hide();
-              $('#profile-save-button').hide();
-
-
               alert("성공적으로 변경되었습니다.");
             }else{
               alert("에러가 발생했습니다.");
@@ -218,6 +244,34 @@
         });
       });
 
+
+      $('#password-change-button').on('click',function(e){
+
+
+        $.ajax({
+          url: '/members',
+          type: 'PATCH',
+          contentType: 'application/json',
+          data: JSON.stringify({
+            password: $('input[name="password"]').val(),
+            passwordConfirm: $('input[name="passwordConfirm"]').val(),
+            id: $('#user_pk_id').val()
+          }),
+          success: function(response) {
+            if(response === "success"){
+              alert("비밀번호가 성공적으로 변경되었습니다.");
+            }else{
+              alert("에러가 발생했습니다.");
+            }
+
+          },
+          error: function(error) {
+            alert("에러가 발생했습니다.");
+          }
+        });
+
+
+      });
 
     });
 

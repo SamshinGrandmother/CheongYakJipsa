@@ -20,6 +20,6 @@ public class DefaultUserDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    return memberMapper.toUserDetails(memberRepository.findByEmail(username));
+    return memberMapper.toUserDetails(memberRepository.findByUserId(username));
   }
 }

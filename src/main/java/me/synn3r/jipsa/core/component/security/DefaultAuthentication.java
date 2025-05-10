@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 public class DefaultAuthentication extends AbstractAuthenticationToken {
 
-  private String email;
+  private String userId;
   private String password;
 
 
@@ -15,9 +15,9 @@ public class DefaultAuthentication extends AbstractAuthenticationToken {
     super(authorities);
   }
 
-  public DefaultAuthentication(String email, String password) {
+  public DefaultAuthentication(String userId, String password) {
     super(null);
-    this.email = email;
+    this.userId = userId;
     this.password = password;
   }
 
@@ -28,6 +28,6 @@ public class DefaultAuthentication extends AbstractAuthenticationToken {
 
   @Override
   public Object getPrincipal() {
-    return email;
+    return userId;
   }
 }

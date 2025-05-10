@@ -23,12 +23,16 @@ import me.synn3r.jipsa.core.component.security.Role;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @NotBlank
-  @Email
   @Column(updatable = false)
+  private String userId;
+  @NotBlank
+  @Email
+  @Column
   private String email;
   @NotBlank
   private String name;
@@ -43,9 +47,11 @@ public class Member extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private DeleteType deleteType = DeleteType.ACTIVE;
 
-  public Member(Long id, String email, String name, String password, Role role, String phoneNumber) {
+  public Member(Long id, String email, String userId, String name, String password, Role role,
+    String phoneNumber) {
     this.id = id;
     this.email = email;
+    this.userId = userId;
     this.name = name;
     this.password = password;
     this.role = role;
@@ -65,9 +71,8 @@ public class Member extends BaseEntity {
   }
 
   public void updateMemberInfo(MemberRequest memberRequest) {
+    this.email = memberRequest.getEmail();
     this.name = memberRequest.getName();
-    this.password = memberRequest.getPassword();
     this.phoneNumber = memberRequest.getPhoneNumber();
-    this.password = memberRequest.getPassword();
   }
 }
