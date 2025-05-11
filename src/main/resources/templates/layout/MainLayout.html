@@ -42,6 +42,29 @@
         return {};
     }
 
+    function sendFetchRequest(method, url, body) {
+        return fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                ...getCsrfToken()
+            },
+            body: JSON.stringify(body),
+        })
+        .then(response => {
+            if (response.status === 200) {
+                successAlert();
+            }else{
+                response.json().then(error => {
+                    errorAlert(error.message)});
+            }
+        })
+        .catch(error => {
+            errorAlert(error.message);
+        });
+    }
+
+
     function successAlert(){
 
         Swal.fire({
