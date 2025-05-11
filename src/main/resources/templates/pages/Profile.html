@@ -224,51 +224,78 @@
         const jsonObject = {};
         formData.forEach((value, key) => jsonObject[key] = value);
 
-        $.ajax({
-          url: '/members',
-          type: 'PUT',
-          contentType: 'application/json',
-          data: JSON.stringify(jsonObject),
-          success: function(response) {
-
-            if(response === "success"){
-              alert("성공적으로 변경되었습니다.");
-            }else{
-              alert("에러가 발생했습니다.");
-            }
-
+        fetch('/members', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            ...getCsrfToken()
           },
-          error: function(error) {
-            alert("에러가 발생했습니다.");
+          body: JSON.stringify(jsonObject)
+        })
+        .then(response => {
+          if (response.status === 200) {
+            successAlert();
+          }else{
+            response.json().then(error => {
+              errorAlert(error.message)});
           }
+        })
+        .catch(error => {
+          errorAlert(error.message);
         });
+
+
       });
 
 
       $('#password-change-button').on('click',function(e){
 
-
-        $.ajax({
-          url: '/members',
-          type: 'PATCH',
-          contentType: 'application/json',
-          data: JSON.stringify({
+        fetch('/members', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            ...getCsrfToken()
+          },
+          body:JSON.stringify({
             password: $('input[name="password"]').val(),
             passwordConfirm: $('input[name="passwordConfirm"]').val(),
             id: $('#user_pk_id').val()
           }),
-          success: function(response) {
-            if(response === "success"){
-              alert("비밀번호가 성공적으로 변경되었습니다.");
-            }else{
-              alert("에러가 발생했습니다.");
-            }
-
-          },
-          error: function(error) {
-            alert("에러가 발생했습니다.");
+        })
+        .then(response => {
+          if (response.status === 200) {
+            successAlert();
+          }else{
+            response.json().then(error => {
+              errorAlert(error.message)});
           }
+        })
+        .catch(error => {
+          errorAlert(error.message);
         });
+
+
+        // $.ajax({
+        //   url: '/members',
+        //   type: 'PATCH',
+        //   contentType: 'application/json',
+        //   data: JSON.stringify({
+        //     password: $('input[name="password"]').val(),
+        //     passwordConfirm: $('input[name="passwordConfirm"]').val(),
+        //     id: $('#user_pk_id').val()
+        //   }),
+        //   success: function(response) {
+        //     if(response === "success"){
+        //       alert("비밀번호가 성공적으로 변경되었습니다.");
+        //     }else{
+        //       alert("에러가 발생했습니다.");
+        //     }
+        //
+        //   },
+        //   error: function(error) {
+        //     alert("에러가 발생했습니다.");
+        //   }
+        // });
 
 
       });

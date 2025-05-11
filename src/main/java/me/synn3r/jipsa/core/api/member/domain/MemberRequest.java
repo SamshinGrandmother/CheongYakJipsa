@@ -30,11 +30,11 @@ public class MemberRequest {
   @NotEmpty(groups = {Insert.class})
   private String userId;
 
-  @NotEmpty(groups = {Insert.class, Update.class})
+  @NotEmpty(groups = {Insert.class, Update.class}, message = "이름을 입력해 주세요.")
   private String name;
 
-  @NotEmpty(groups = {Insert.class})
-  @Email(groups = {Insert.class})
+  @NotEmpty(groups = {Insert.class, Update.class,},message = "이메일을 입력해 주세요.")
+  @Email(groups = {Insert.class, Update.class}, message = "이메일 형식대로 입력해 주세요")
   private String email;
 
   @NotNull(groups = {Insert.class})
@@ -44,10 +44,10 @@ public class MemberRequest {
   @PasswordComplexity(groups = {Insert.class, UpdatePassword.class})
   private String password;
 
-  @NotEmpty(groups = {Insert.class, UpdatePassword.class})
+  @NotEmpty(groups = {Insert.class, UpdatePassword.class}, message="비밀번호 확인을 입력해 주세요.")
   private String passwordConfirm;
 
-  @NotNull(groups = {Insert.class})
+  @NotEmpty(groups = {Insert.class, Update.class},message = "전화번호를 입력해 주세요.")
   private String phoneNumber;
 
 }

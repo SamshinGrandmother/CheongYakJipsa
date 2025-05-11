@@ -24,18 +24,45 @@
 <script src="/bootstrap/js/core/bootstrap.min.js"></script>
 <script src="/bootstrap/js/plugins/perfect-scrollbar.min.js"></script>
 <script src="/bootstrap/js/plugins/smooth-scrollbar.min.js"></script>
-<script async defer src="https://buttons.github.io/buttons.js"></script>
 <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="/bootstrap/js/material-dashboard.min.js?v=3.2.0"></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    $(document).ajaxSend(function(e, xhr) {
-        const token = $('meta[name="_csrf"]').attr('content');
-        const header = $('meta[name="_csrf_header"]').attr('content');
 
-        if (token && header) {
-            xhr.setRequestHeader(header, token);
+    function getCsrfToken() {
+        const token = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+        const headerName = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
+
+        if (token && headerName) {
+            return {
+                [headerName]: token
+            };
         }
-    });
+        return {};
+    }
+
+    function successAlert(){
+
+        Swal.fire({
+            title: "success",
+            icon: "success",
+            draggable: true
+        });
+
+    }
+
+    function errorAlert(message){
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: message,
+        });
+    }
+
+
+
+
 </script>
 </body>
 </html>
