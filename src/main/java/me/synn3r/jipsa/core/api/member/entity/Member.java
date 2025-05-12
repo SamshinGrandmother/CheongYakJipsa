@@ -30,12 +30,16 @@ public class Member extends BaseEntity {
   @NotBlank
   @Column(updatable = false)
   private String userId;
+
+  @NotBlank
+  @Comment("사용자 및 관리자의 이름")
+  private String name;
+
   @NotBlank
   @Email
   @Column
   private String email;
-  @NotBlank
-  private String name;
+
   @NotBlank
   private String password;
   @Enumerated(EnumType.STRING)
