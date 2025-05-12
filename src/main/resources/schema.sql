@@ -1,6 +1,6 @@
 create table if not exists member
 (
-    id          bigint auto_increment primary key comment '사용자 및 관리자의 PK',
+    id          bigint auto_increment comment '사용자 및 관리자의 PK',
     user_id     varchar(16)  not null comment '사용자 및 관리자가 인증 시 사용하는 ID',
     name        varchar(32)  not null comment '사용자 및 관리자의 이름',
     email       varchar(32)  not null comment '사용자 및 관리자의 이메일',
