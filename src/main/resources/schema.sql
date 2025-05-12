@@ -7,9 +7,9 @@ create table if not exists member
     password    varchar(128) not null,
     role        varchar(8)   not null,
     delete_type varchar(6)   not null,
+    phone_number varchar(20) default null,
     updated_at  timestamp    not null,
     created_at  timestamp    not null,
-    phone_number varchar(20) default null,
     PRIMARY KEY (`id`),
     UNIQUE KEY `member_unique` (`user_id`)
 );
