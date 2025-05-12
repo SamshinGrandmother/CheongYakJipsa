@@ -14,15 +14,6 @@ create table if not exists member
     UNIQUE KEY `member_unique` (`user_id`)
 );
 
-create table if not exists team
-(
-    id          bigint auto_increment primary key,
-    name        varchar(32) not null,
-    delete_type varchar(6)  not null,
-    updated_at  timestamp   not null,
-    created_at  timestamp   not null
-);
-
 create table if not exists member_access_history
 (
     id                              bigint auto_increment primary key,
