@@ -17,34 +17,50 @@ import me.synn3r.jipsa.core.api.base.entity.BaseEntity;
 import me.synn3r.jipsa.core.api.base.enumeration.DeleteType;
 import me.synn3r.jipsa.core.api.member.domain.MemberRequest;
 import me.synn3r.jipsa.core.component.security.Role;
+import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Comment("사용자 및 관리자 테이블")
 public class Member extends BaseEntity {
 
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Comment("사용자 및 관리자의 식별자")
   private Long id;
+
   @NotBlank
   @Column(updatable = false)
+  @Comment("사용자 및 관리자가 인증 시 사용하는 ID")
   private String userId;
+
+  @NotBlank
+  @Comment("사용자 및 관리자의 이름")
+  private String name;
+
   @NotBlank
   @Email
   @Column
+  @Comment("사용자 및 관리자의 이메일")
   private String email;
+
   @NotBlank
-  private String name;
-  @NotBlank
+  @Comment("사용자 및 관리자의 패스워드")
   private String password;
+
   @Enumerated(EnumType.STRING)
   @NotNull
+  @Comment("사용자 및 관리자의 권한")
   private Role role;
+
   @NotNull
+  @Comment("사용자 및 관리자의 전화번호")
   private String phoneNumber;
 
   @Enumerated(EnumType.STRING)
+  @Comment("사용자 및 관리자의 삭제 여부")
   private DeleteType deleteType = DeleteType.ACTIVE;
 
   public Member(Long id, String email, String userId, String name, String password, Role role,
