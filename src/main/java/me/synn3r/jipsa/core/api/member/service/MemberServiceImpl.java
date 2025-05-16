@@ -90,6 +90,11 @@ public class MemberServiceImpl implements MemberService, AuthenticationSuccessLo
   }
 
   @Override
+  public void verifyEmail(String email) {
+
+  }
+
+  @Override
   @Transactional
   public void saveAuthenticationFailureHistory(String username,
     AuthenticationFailureType authenticationFailureType) {

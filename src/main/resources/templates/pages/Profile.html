@@ -63,6 +63,7 @@
                       </div>
                       <div class="col-9">
                         <input type="email" class="form-control form-control-sm form-control-border" name="email" th:field="*{email}">
+                        <button id="verify-email" class="form-control" type="button">이메일 인증</button>
                       </div>
                     </div>
                   </li>
@@ -238,6 +239,13 @@
           });
 
       });
+
+      $('#verify-email').on('click', function(e){
+        sendFetchRequest('POST', '/member/verify/email', {
+          email: $('input[name="email"]').val(),
+        });
+
+      })
 
     });
 

@@ -5,6 +5,7 @@ import java.util.List;
 import me.synn3r.jipsa.core.api.base.domain.Request.Insert;
 import me.synn3r.jipsa.core.api.base.domain.Request.Update;
 import me.synn3r.jipsa.core.api.base.domain.Request.UpdatePassword;
+import me.synn3r.jipsa.core.api.email.domain.EmailRequest;
 import me.synn3r.jipsa.core.api.member.domain.MemberRequest;
 import me.synn3r.jipsa.core.api.member.domain.MemberResponse;
 import me.synn3r.jipsa.core.api.member.domain.MemberSearchCondition;
@@ -69,5 +70,13 @@ public class MemberController {
     memberService.deleteMember(id);
   }
 
+  @PostMapping("/member/verify/email")
+  @Operation(summary = "이메일 인증", description = "회원가입 or 마이페이지에서 이메일을 인증할 수 있는 기능")
+  public void verifyEmail(@RequestBody EmailRequest emailRequest) {
+
+    memberService.verifyEmail(emailRequest.getEmail());
+
+
+  }
 
 }
