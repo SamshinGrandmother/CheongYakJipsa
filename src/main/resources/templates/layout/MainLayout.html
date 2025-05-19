@@ -51,12 +51,12 @@
             },
             body: JSON.stringify(body),
         })
-        .then(response => {
+        .then(async response => {
+            const data = await response.json();
             if (response.status === 200) {
-                successAlert();
+                successAlert(data.message);
             }else{
-                response.json().then(error => {
-                    errorAlert(error.message)});
+                errorAlert(data.message);
             }
         })
         .catch(error => {
@@ -64,11 +64,10 @@
         });
     }
 
-
-    function successAlert(){
+    function successAlert(successMessage){
 
         Swal.fire({
-            title: "success",
+            title: successMessage,
             icon: "success",
             draggable: true
         });

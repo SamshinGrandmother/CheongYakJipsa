@@ -58,18 +58,42 @@
                 <ul class="list-group">
                   <li class="list-group-item border-0 ps-0 text-sm">
                     <div class="row">
-                      <div class="col-3 d-flex justify-content-end align-items-center ">
+                      <div class="col-3 d-flex justify-content-end align-items-center">
                         <strong class="text-dark">이메일 :</strong>
                       </div>
                       <div class="col-9">
-                        <input type="email" class="form-control form-control-sm form-control-border" name="email" th:field="*{email}">
-                        <button id="verify-email" class="form-control" type="button">이메일 인증</button>
+                        <div class="row">
+                          <div class="col-9 pe-1">
+                            <input type="email" class="form-control form-control-sm form-control-border"
+                                   name="email" th:field="*{email}" placeholder="이메일 주소를 입력하세요">
+                          </div>
+                          <div class="col-3 ps-1">
+                            <button id="verify-email" class="btn btn-outline-primary btn-sm w-100" type="button">인증</button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </li>
                   <li class="list-group-item border-0 ps-0 text-sm">
                     <div class="row">
-                      <div class="col-3 d-flex justify-content-end align-items-center ">
+                      <div class="col-3 d-flex justify-content-end align-items-center">
+                        <strong class="text-dark">인증확인 :</strong>
+                      </div>
+                      <div class="col-9">
+                        <div class="row">
+                          <div class="col-9 pe-1">
+                            <input type="number" id="verify-code" name="verify-code" class="form-control form-control-sm form-control-border" placeholder="인증번호 입력">
+                          </div>
+                          <div class="col-3 ps-1">
+                            <button id="check-verify-code" class="btn btn-outline-success btn-sm w-100" type="button">확인</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item border-0 ps-0 text-sm">
+                    <div class="row">
+                      <div class="col-3 d-flex justify-content-end align-items-center">
                         <strong class="text-dark">이름 :</strong>
                       </div>
                       <div class="col-9">
@@ -208,13 +232,9 @@
     </div>
   </div>
   <script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-    }
+
+    let requestEmailVerify = false;
+
 
     $(function() {
 
@@ -241,11 +261,24 @@
       });
 
       $('#verify-email').on('click', function(e){
-        sendFetchRequest('POST', '/member/verify/email', {
+        requestEmailVerify = true; //todo : request success 후에 상태 바꿔야 할 듯
+
+        sendFetchRequest('POST', '/verify/email', {
           email: $('input[name="email"]').val(),
         });
 
-      })
+      });
+
+      $('#check-verify-code').on('click',function(){
+
+        sendFetchRequest('POST', '/check/email/code', {
+          email: $('input[name="email"]').val(),
+          verifyCode: $('input[name="verify-code"]').val(),
+        });
+
+      });
+
+
 
     });
 

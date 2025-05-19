@@ -8,7 +8,7 @@ import lombok.Setter;
 public class EmailRequest {
 
   private String email;
-
+  private int verifyCode;
 
 
 

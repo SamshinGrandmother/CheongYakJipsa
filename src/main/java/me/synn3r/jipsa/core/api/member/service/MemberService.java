@@ -22,5 +22,4 @@ public interface MemberService {
 
   MemberResponse findMemberByUserId(String username);
 
-  void verifyEmail(String email);
 }

@@ -70,13 +70,6 @@ public class MemberController {
     memberService.deleteMember(id);
   }
 
-  @PostMapping("/member/verify/email")
-  @Operation(summary = "이메일 인증", description = "회원가입 or 마이페이지에서 이메일을 인증할 수 있는 기능")
-  public void verifyEmail(@RequestBody EmailRequest emailRequest) {
 
-    memberService.verifyEmail(emailRequest.getEmail());
-
-
-  }
 
 }
