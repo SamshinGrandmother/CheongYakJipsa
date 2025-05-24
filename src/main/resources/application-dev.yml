@@ -9,3 +9,6 @@ spring:
     password: ENC(hYV7HjzY/AfsRCbDXznJYE0nrmsVL/2evvMiTnejKauO2XA6I2T59EzI5IH7HblI)
   jpa:
     show-sql: true
+dataApi:
+  applyHome:
+    apiKey: 3Ef3hiJShpTGdcBWDIEoucZHTET/stBz1mlvGX4TeVKjIXdRxffm2sLXBmNK7ZNJKJNnFw+3t8StJOrO/3Grjw==
