@@ -5,12 +5,12 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class HomeResponse {
+public class HouseResponse {
 
   private int currentCount;
   private int matchCount;
   private int page;
   private int perPage;
   private int totalCount;
-  private final List<HomeScheduleResponse> data = new ArrayList<>();
+  private final List<HouseScheduleResponse> data = new ArrayList<>();
 }

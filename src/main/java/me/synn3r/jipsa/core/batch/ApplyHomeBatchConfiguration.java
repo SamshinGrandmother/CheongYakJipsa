@@ -1,7 +1,7 @@
 package me.synn3r.jipsa.core.batch;
 
 import lombok.RequiredArgsConstructor;
-import me.synn3r.jipsa.core.batch.domain.HomeScheduleResponse;
+import me.synn3r.jipsa.core.batch.domain.HouseScheduleResponse;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobScope;
@@ -21,8 +21,8 @@ public class ApplyHomeBatchConfiguration {
 
   private final JobRepository jobRepository;
   private final PlatformTransactionManager transactionManager;
-  private final ItemReader<HomeScheduleResponse> homeReader;
-  private final ItemWriter<HomeScheduleResponse> homeWriter;
+  private final ItemReader<HouseScheduleResponse> homeReader;
+  private final ItemWriter<HouseScheduleResponse> homeWriter;
 
   @Bean(name = "applyHomeBatchJob")
   public Job applyHomeBatchJob() {
@@ -37,7 +37,7 @@ public class ApplyHomeBatchConfiguration {
   @JobScope
   public Step applyHomeBatchStep() {
     return new StepBuilder("applyHomeBatchStep", jobRepository)
-      .<HomeScheduleResponse, HomeScheduleResponse>chunk(1000, transactionManager)
+      .<HouseScheduleResponse, HouseScheduleResponse>chunk(1000, transactionManager)
       .reader(homeReader)
       .writer(homeWriter)
       .build();

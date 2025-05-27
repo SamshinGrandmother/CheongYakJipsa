@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum HomeType {
+public enum HouseType {
   SPECIALAPT("특별공급APT", "01"),
   FIRSTAPT("1순위APT", "02"),
   SECONDAPT("2순위APT", "03"),
@@ -21,10 +21,10 @@ public enum HomeType {
   private final String homeTypeName;
   private final String homeTypeCode;
 
-  public static HomeType findByHomeTypeCode(String homeTypeCode) {
-    for (HomeType homeType : HomeType.values()) {
-      if (homeType.getHomeTypeCode().equals(homeTypeCode)) {
-        return homeType;
+  public static HouseType findByHomeTypeCode(String homeTypeCode) {
+    for (HouseType houseType : HouseType.values()) {
+      if (houseType.getHomeTypeCode().equals(homeTypeCode)) {
+        return houseType;
       }
     }
     return NONE;

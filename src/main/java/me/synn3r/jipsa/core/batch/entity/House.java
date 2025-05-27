@@ -12,25 +12,25 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import me.synn3r.jipsa.core.batch.enumeration.HomeType;
+import me.synn3r.jipsa.core.batch.enumeration.HouseType;
 import me.synn3r.jipsa.core.batch.enumeration.LocationType;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Home {
+public class House {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "home_id")
+  @Column(name = "house_id")
   private long id;
   private long manageNumber;
   private LocalDate applyDateStart;
   private LocalDate applyDateEnd;
   private String name;
   @Enumerated(EnumType.STRING)
-  private HomeType homeType;
+  private HouseType houseType;
   @Enumerated(EnumType.STRING)
   private LocationType locationType;
   private String address;

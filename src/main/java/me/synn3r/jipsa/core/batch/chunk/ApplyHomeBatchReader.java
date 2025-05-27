@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import me.synn3r.jipsa.core.batch.domain.HomeResponse;
-import me.synn3r.jipsa.core.batch.domain.HomeScheduleResponse;
-import me.synn3r.jipsa.core.config.feign.HomeClient;
+import me.synn3r.jipsa.core.batch.domain.HouseResponse;
+import me.synn3r.jipsa.core.batch.domain.HouseScheduleResponse;
+import me.synn3r.jipsa.core.config.feign.HouseClient;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemStreamException;
 import org.springframework.batch.item.ItemStreamReader;
@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class HomeResponseReader implements ItemStreamReader<HomeScheduleResponse> {
+public class ApplyHomeBatchReader implements ItemStreamReader<HouseScheduleResponse> {
 
-  private final HomeClient homeClient;
-  private final List<HomeScheduleResponse> scheduleResponses = new ArrayList<>();
+  private final HouseClient houseClient;
+  private final List<HouseScheduleResponse> scheduleResponses = new ArrayList<>();
   @Value("${dataApi.applyHome.apiKey}")
   private String secretKey;
   private final int PAGE_SIZE = 100;
@@ -40,7 +40,7 @@ public class HomeResponseReader implements ItemStreamReader<HomeScheduleResponse
   }
 
   @Override
-  public HomeScheduleResponse read() {
+  public HouseScheduleResponse read() {
      if (scheduleResponses.isEmpty()) {
        if (isEnd) {
          return null;
@@ -56,8 +56,8 @@ public class HomeResponseReader implements ItemStreamReader<HomeScheduleResponse
 
   protected void fetchNextPage() {
     currentPage++;
-    homeClient.fetchHome(currentPage, PAGE_SIZE, secretKey);
-    HomeResponse response = homeClient.fetchHome(currentPage, PAGE_SIZE, secretKey);
+    houseClient.fetchHome(currentPage, PAGE_SIZE, secretKey);
+    HouseResponse response = houseClient.fetchHome(currentPage, PAGE_SIZE, secretKey);
     scheduleResponses.addAll(
       Optional.ofNullable(response.getData()).orElse(Collections.emptyList()));
 

@@ -1,11 +1,11 @@
 package me.synn3r.jipsa.core.batch.repository;
 
-import me.synn3r.jipsa.core.batch.entity.Home;
+import me.synn3r.jipsa.core.batch.entity.House;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HomeRepository extends JpaRepository<Home, Long> {
+public interface HouseRepository extends JpaRepository<House, Long> {
 
   boolean existsByManageNumber(long manageNumber);
 }

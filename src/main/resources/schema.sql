@@ -23,14 +23,14 @@ create table if not exists member_access_history
     access_at                       timestamp  not null comment '접속 시도 시각'
 ) comment '사용자 및 관리자 접속 기록 테이블';
 
-create table if not exists home
+create table if not exists house
 (
-    home_id          bigint auto_increment primary key comment '주택 ID',
+    house_id          bigint auto_increment primary key comment '주택 ID',
     name             varchar(128)  not null comment '주택명',
     manage_number    bigint       not null comment '주택관리번호',
     apply_date_start date         not null comment '청약 접수 시작일',
     apply_date_end   date         not null comment '청약 접수 종료일',
-    home_type        varchar(16)  not null comment '주택구분코드',
+    house_type        varchar(16)  not null comment '주택구분코드',
     location_type    varchar(16)  not null comment '공급지역코드',
     address          varchar(255) not null comment '공급위치',
     url              varchar(255) not null comment '분양정보 URL'

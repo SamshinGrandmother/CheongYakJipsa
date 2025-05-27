@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @JsonNaming(value = UpperSnakeCaseStrategy.class)
-public class HomeScheduleResponse {
+public class HouseScheduleResponse {
 
   @Schema(name = "주택관리번호")
   private String HOUSE_MANAGE_NO;
