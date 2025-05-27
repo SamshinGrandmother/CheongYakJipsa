@@ -26,7 +26,7 @@ create table if not exists member_access_history
 create table if not exists home
 (
     home_id          bigint auto_increment primary key comment '주택 ID',
-    name             varchar(32)  not null comment '주택명',
+    name             varchar(128)  not null comment '주택명',
     manage_number    bigint       not null comment '주택관리번호',
     apply_date_start date         not null comment '청약 접수 시작일',
     apply_date_end   date         not null comment '청약 접수 종료일',
