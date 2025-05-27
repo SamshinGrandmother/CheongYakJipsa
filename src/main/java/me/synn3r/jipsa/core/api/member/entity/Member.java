@@ -29,6 +29,7 @@ public class Member extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Comment("사용자 및 관리자의 식별자")
+  @Column(name="member_id")
   private Long id;
 
   @NotBlank
