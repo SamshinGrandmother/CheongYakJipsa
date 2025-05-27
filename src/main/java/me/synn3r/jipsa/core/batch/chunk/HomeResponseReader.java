@@ -22,13 +22,16 @@ public class HomeResponseReader implements ItemStreamReader<HomeScheduleResponse
   private final List<HomeScheduleResponse> scheduleResponses = new ArrayList<>();
   @Value("${dataApi.applyHome.apiKey}")
   private String secretKey;
+  private final int PAGE_SIZE = 100;
+  private final int INIT_PAGE = 0;
+  private int currentPage = INIT_PAGE;
+  private boolean isEnd = false;
 
   @Override
   public void open(ExecutionContext executionContext) throws ItemStreamException {
+    currentPage = INIT_PAGE;
+    isEnd = false;
     scheduleResponses.clear();
-    HomeResponse response = homeClient.fetchHome(1, 10, secretKey);
-    scheduleResponses.addAll(
-      Optional.ofNullable(response.getData()).orElse(Collections.emptyList()));
   }
 
   @Override
@@ -38,10 +41,28 @@ public class HomeResponseReader implements ItemStreamReader<HomeScheduleResponse
 
   @Override
   public HomeScheduleResponse read() {
-    if (scheduleResponses.isEmpty()) {
-      return null;
+     if (scheduleResponses.isEmpty()) {
+       if (isEnd) {
+         return null;
+       }
+
+      fetchNextPage();
+      return read();
     }
 
+
     return scheduleResponses.removeFirst();
+  }
+
+  protected void fetchNextPage() {
+    currentPage++;
+    homeClient.fetchHome(currentPage, PAGE_SIZE, secretKey);
+    HomeResponse response = homeClient.fetchHome(currentPage, PAGE_SIZE, secretKey);
+    scheduleResponses.addAll(
+      Optional.ofNullable(response.getData()).orElse(Collections.emptyList()));
+
+    if (response.getData().size() < PAGE_SIZE) {
+      isEnd = true;
+    }
   }
 }
