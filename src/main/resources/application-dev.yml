@@ -1,4 +1,7 @@
 spring:
+  batch:
+    job:
+      names: ${home.batch.jobName:NONE}
   sql:
     init:
       mode: never
