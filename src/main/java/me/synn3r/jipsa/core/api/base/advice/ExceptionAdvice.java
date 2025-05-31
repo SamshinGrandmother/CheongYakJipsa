@@ -1,5 +1,6 @@
 package me.synn3r.jipsa.core.api.base.advice;
 
+import java.util.Objects;
 import me.synn3r.jipsa.core.api.base.domain.FailResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -18,7 +19,10 @@ public class ExceptionAdvice {
 
   @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
   public ResponseEntity<FailResponse> resolveBindException(BindException e) {
-    return ResponseEntity.badRequest().body(FailResponse.of(e.getMessage()));
+
+    String errorMessage = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
+
+    return ResponseEntity.badRequest().body(FailResponse.of(errorMessage));
   }
 
   @ExceptionHandler(NoResourceFoundException.class)
