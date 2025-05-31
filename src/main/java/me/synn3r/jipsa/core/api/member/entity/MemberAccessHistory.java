@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import me.synn3r.jipsa.core.api.base.enumeration.ResultType;
 import me.synn3r.jipsa.core.component.security.enumerations.AuthenticationFailureType;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.Immutable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -25,11 +26,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Comment("사용자 및 관리자 접속 기록 테이블")
+@Immutable
 public class MemberAccessHistory {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Comment("사용자 및 관리자 접속 기록 식별자")
+  @Column(name = "member_access_history_id")
   private Long id;
 
   @Enumerated(EnumType.STRING)
