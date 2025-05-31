@@ -42,7 +42,7 @@
         return {};
     }
 
-    function sendFetchRequest(method, url, body) {
+    function sendFetchRequest(method, url, body, afterSuccess) {
         return fetch(url, {
             method: method,
             headers: {
@@ -52,11 +52,16 @@
             body: JSON.stringify(body),
         })
         .then(async response => {
-            const data = await response.json();
-            if (response.status === 200) {
-                successAlert(data.message);
+
+            const isJson = response.headers.get("Content-Type")?.includes("application/json");
+            let responseJsonData = null;
+            if(isJson) responseJsonData = await response.json();
+            if (response.ok) {
+                successAlert(responseJsonData?.message || "성공적으로 저장되었습니다.");
+                if(afterSuccess) afterSuccess();
+
             }else{
-                errorAlert(data.message);
+                errorAlert(responseJsonData?.message || "저장에 실패하였습니다.");
             }
         })
         .catch(error => {

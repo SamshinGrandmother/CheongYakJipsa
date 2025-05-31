@@ -233,7 +233,7 @@
   </div>
   <script>
 
-    let requestEmailVerify = false;
+    let isEmailVerified = false;
 
 
     $(function() {
@@ -241,11 +241,19 @@
       $('#edit-profile').on('submit', function(e) {
         e.preventDefault();
 
-        const formData = new FormData(this);
-        const jsonObject = {};
-        formData.forEach((value, key) => jsonObject[key] = value);
+        const jsonObject = {
+          id: $('#user_pk_id').val(),
+          email: $('#email').val(),
+          name: $('#name').val(),
+          phoneNumber: $('#phoneNumber').val(),
+          role: $('#role').val(),
+          isEmailVerified: isEmailVerified
+        };
 
-        sendFetchRequest('PUT', '/members', jsonObject);
+        sendFetchRequest('PUT', '/members', jsonObject, () =>{
+          isEmailVerified = false;
+          $('#verify-code').val("");
+        });
 
       });
 
@@ -261,11 +269,12 @@
       });
 
       $('#verify-email').on('click', function(e){
-        requestEmailVerify = true; //todo : request success 후에 상태 바꿔야 할 듯
+
 
         sendFetchRequest('POST', '/verify/email', {
           email: $('input[name="email"]').val(),
         });
+
 
       });
 
@@ -274,6 +283,8 @@
         sendFetchRequest('POST', '/check/email/code', {
           email: $('input[name="email"]').val(),
           verifyCode: $('input[name="verify-code"]').val(),
+        },() =>{
+            isEmailVerified = true;
         });
 
       });
