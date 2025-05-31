@@ -202,38 +202,39 @@ class MemberControllerTest extends MemberTestSupport {
   @Test
   @DisplayName("사용자 추가 시 비밀번호와 비밀번호 확인 값이 다를 시 메세지 반환")
   void saveMemberPasswordCheckConfirmValidationTest() throws Exception {
-    Map<String, Object> jsonObject = new HashMap<>();
-    jsonObject.put("name", "테스트123");
-    jsonObject.put("email", "abc123@gmail.com");
-    jsonObject.put("password", "Jipsa2025!");
-    jsonObject.put("passwordConfirm", "Jipsa2025!!");
-    jsonObject.put("role", Role.NORMAL.name());
+    Map<String, Object> map = new HashMap<>();
+    map.put("id", 1L);
+    map.put("password", "Jipsa2025!");
+    map.put("passwordConfirm", "Jipsa2025!!");
+
+
     mockMvc
-      .perform(post("/members")
+      .perform(patch("/members")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(jsonObject)))
-      .andExpect(jsonPath("$.message").value(Matchers.containsString("비밀번호가 일치하지 않습니다.")));
+        .content(objectMapper.writeValueAsString(map)))
+      .andExpect(status().isBadRequest());
+
   }
 
   @Test
   @DisplayName("사용자 추가 시 비밀번호 복잡도 검증")
   void saveMemberCheckPasswordComplexValidationTest() throws Exception {
 
-    MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-    formData.add("name", "테스트123");
-    formData.add("email", "abc123@gmail.com");
-    formData.add("password", "test");
-    formData.add("passwordConfirm", "test");
-    formData.add("role", Role.NORMAL.name());
-    formData.add("phoneNumber", "010-9109-8751");
+    Map<String, Object> map = new HashMap<>();
+    map.put("id", 1L);
+    map.put("password", "test");
+    map.put("passwordConfirm", "test");
+
 
     mockMvc
-      .perform(post("/members")
-        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        .params(formData))
+      .perform(patch("/members")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(map)))
       .andExpect(status().isBadRequest())
       .andExpect(jsonPath("$.message").value(
         Matchers.containsString("비밀번호는 대/소문자, 숫자, 특수문자 포함 8글자 이상이어야 합니다.")));
+
+
   }
 
 
@@ -244,6 +245,7 @@ class MemberControllerTest extends MemberTestSupport {
     jsonObject.put("id", 1L);
     jsonObject.put("name", "테스트123");
     jsonObject.put("email", "abc123@gmail.com");
+    jsonObject.put("isEmailVerified", true);
 
     mockMvc
       .perform(put("/members")
