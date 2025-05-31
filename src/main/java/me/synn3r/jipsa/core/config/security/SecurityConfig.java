@@ -75,6 +75,7 @@ public class SecurityConfig {
           "/v3/api-docs/**")
         .permitAll()
         .requestMatchers(HttpMethod.POST, saveMemberApi()).permitAll()
+        .requestMatchers(HttpMethod.POST, "/verify/email", "/check/email/code").permitAll()
         .requestMatchers("/**")
         .authenticated())
       .logout(customize -> customize
