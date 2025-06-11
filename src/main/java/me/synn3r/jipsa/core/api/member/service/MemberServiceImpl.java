@@ -12,7 +12,6 @@ import me.synn3r.jipsa.core.component.security.enumerations.AuthenticationFailur
 import me.synn3r.jipsa.core.component.security.logging.AuthenticationFailureLogger;
 import me.synn3r.jipsa.core.component.security.logging.AuthenticationSuccessLogger;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
