@@ -6,13 +6,6 @@
 <div layout:fragment="content" class="page-header min-vh-100">
   <div class="container">
     <div class="row">
-      <div
-          class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 start-0 text-center justify-content-center flex-column">
-        <div
-            class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center"
-            style="background-image: url('../assets/img/illustrations/illustration-signup.jpg'); background-size: cover;">
-        </div>
-      </div>
       <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
         <div class="card" style="backgroud-color : white">
           <div class="card-header">
@@ -20,7 +13,7 @@
             <p class="mb-0">Enter your email and password to register</p>
           </div>
           <div class="card-body">
-            <form role="form" th:object="${signupForm}" th:action="|${@securityConfig.saveMemberApi()}|" method="POST">
+            <form id="signup-form" role="form" th:object="${signupForm}" th:action="|${@securityConfig.saveMemberApi()}|" method="POST">
               <div class="input-group input-group-outline mb-3">
                 <input type="text" class="form-control" th:field="*{name}" placeholder="name">
                 <input type="hidden" th:field="*{role}"/>
@@ -30,6 +23,15 @@
               </div>
               <div class="input-group input-group-outline mb-3">
                 <input type="email" class="form-control" th:field="*{email}" placeholder="email">
+                <button type="button" class="btn btn-outline-secondary ms-2 btn-sm valid-tooltip" style="margin:0" id="verify-email">
+                  인증
+                </button>
+              </div>
+              <div class="input-group input-group-outline mb-3">
+                <input type="text" class="form-control" placeholder="인증번호 입력" id="verify-code">
+                <button type="button" class="btn btn-outline-secondary ms-2 btn-sm valid-tooltip" style="margin:0" id="check-verify-email">
+                  확인
+                </button>
               </div>
               <div class="input-group input-group-outline mb-3">
                 <input type="password" class="form-control" th:field="*{password}"
@@ -68,15 +70,56 @@
       </div>
     </div>
   </div>
+  <script>
+
+    let isEmailVerified = false;
+
+    $(function() {
+
+      $('#verify-email').on('click', function(e){
+
+        sendFetchRequest('POST', '/verify/email', {
+          email: $('#email').val(),
+        });
+      });
+
+
+
+      $('#edit-profile').on('submit', function(e) {
+        e.preventDefault();
+
+        const jsonObject = {
+          id: $('#id').val(),
+          email: $('#email').val(),
+          name: $('#name').val(),
+          password: $('#password').val(),
+          passwordConfirm: $('#passwordConfirm').val(),
+          phoneNumber: $('#phoneNumber').val(),
+          role: $('#role').val(),
+          isEmailVerified: isEmailVerified
+        };
+
+        sendFetchRequest('POST', '/members', jsonObject, () =>{
+          isEmailVerified = false;
+          $('#verify-code').val("");
+        });
+
+
+      });
+
+      $('#check-verify-email').on('click',function(){
+
+        sendFetchRequest('POST', '/check/email/code', {
+          email: $('input[name="email"]').val(),
+          verifyCode: $('input[name="verify-code"]').val(),
+        },() =>{
+          isEmailVerified = true;
+        });
+
+      });
+    });
+  </script>
 </div>
 
-<script>
-  var win = navigator.platform.indexOf('Win') > -1;
-  if (win && document.querySelector('#sidenav-scrollbar')) {
-    var options = {
-      damping: '0.5'
-    }
-    Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-  }
-</script>
+
 </html>

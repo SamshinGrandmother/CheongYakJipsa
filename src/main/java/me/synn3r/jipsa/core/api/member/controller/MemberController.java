@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
 public class MemberController {
@@ -52,7 +51,7 @@ public class MemberController {
   @PutMapping("/members")
   @Operation(summary = "마이 페이지 정보 업데이트", description = "마이 페이지에서 나의 정보 수정하는 API")
   public ResponseEntity<Void> updateMember(
-     @Validated({Update.class})@RequestBody MemberRequest memberRequest) {
+    @Validated({Update.class}) @RequestBody MemberRequest memberRequest) {
     memberService.updateMember(memberRequest);
     return ResponseEntity.ok().build();
   }

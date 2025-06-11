@@ -1,6 +1,7 @@
 package me.synn3r.jipsa.core.api.member.domain;
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -49,5 +50,8 @@ public class MemberRequest {
 
   @NotEmpty(groups = {Insert.class, Update.class},message = "전화번호를 입력해 주세요.")
   private String phoneNumber;
+
+  @AssertTrue(groups = {Insert.class, Update.class},message = "이메일 인증을 완료해주세요.")
+  private Boolean isEmailVerified;
 
 }
