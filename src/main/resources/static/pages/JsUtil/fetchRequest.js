@@ -10,8 +10,7 @@ function getCsrfToken() {
   return {};
 }
 
-function sendFetchRequest(method, url, body) {
-  console.log("url :::::::" + url);
+function sendFetchRequest(method, url, body, afterSuccess) {
   return fetch(url, {
     method: method,
     headers: {
@@ -19,15 +18,17 @@ function sendFetchRequest(method, url, body) {
       ...getCsrfToken()
     },
     body: JSON.stringify(body),
-  })
-  .then(response => {
-    console.log("response ::");
-    console.log(response);
-    if (response.status === 200) {
-      successAlert();
+  }).then(async response => {
+
+    const isJson = response.headers.get("Content-Type")?.includes("application/json");
+    let responseJsonData = null;
+    if(isJson) responseJsonData = await response.json();
+    if (response.ok) {
+      successAlert(responseJsonData?.message || "성공적으로 저장되었습니다.");
+      if(afterSuccess) afterSuccess();
+
     }else{
-      response.json().then(error => {
-        errorAlert(error.message)});
+      errorAlert(responseJsonData?.message || "저장에 실패하였습니다.");
     }
   })
   .catch(error => {
@@ -35,11 +36,10 @@ function sendFetchRequest(method, url, body) {
   });
 }
 
-
-function successAlert(){
+function successAlert(successMessage){
 
   Swal.fire({
-    title: "success",
+    title: successMessage,
     icon: "success",
     draggable: true
   });

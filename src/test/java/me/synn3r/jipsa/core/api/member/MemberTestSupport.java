@@ -24,7 +24,7 @@ public abstract class MemberTestSupport {
 
   protected MemberRequest getMockMemberRequest(Long id, String email, String userId, String name, String password,
     String passwordConfirm,String phoneNumber) {
-    return new MemberRequest(id, email, userId, name, Role.ADMIN, password, passwordConfirm,phoneNumber);
+    return new MemberRequest(id, email, userId, name, Role.ADMIN, password, passwordConfirm,phoneNumber,true);
   }
 
   protected MemberResponse getMockMemberResponse() {
