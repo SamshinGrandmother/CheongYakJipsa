@@ -25,12 +25,15 @@
   </div>
 
 
-  <script>
+  <script th:inline="javascript">
+    console.log([[${calendarList}]]);
     document.addEventListener('DOMContentLoaded', function () {
       var calendarEl = document.getElementById('calendar');
       var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth'
-      });
+            initialView: 'dayGridMonth',
+            events: [[${calendarList}]]
+          })
+      ;
       calendar.render();
     });
   </script>

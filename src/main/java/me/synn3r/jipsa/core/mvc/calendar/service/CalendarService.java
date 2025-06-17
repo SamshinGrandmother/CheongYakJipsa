@@ -5,5 +5,5 @@ import me.synn3r.jipsa.core.mvc.calendar.domain.CalendarResponse;
 
 public interface CalendarService {
 
-  List<CalendarResponse> getCalendar(int year, int month);
+  List<CalendarResponse> getCalendar(Integer year, Integer month);
 }
