@@ -24,6 +24,8 @@ public class CalendarController {
     @RequestParam(name = "year", required = false) Integer year,
     @RequestParam(name = "month", required = false) Integer month, Model model) {
     List<CalendarResponse> calendarList = calendarService.getCalendar(year, month);
+    model.addAttribute("month", month);
+    model.addAttribute("year", year);
     model.addAttribute("calendarList", calendarList);
     return "pages/Calendar";
   }

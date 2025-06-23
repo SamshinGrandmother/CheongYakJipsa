@@ -2,7 +2,6 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/MainBody.html}">
 <head>
-  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
 </head>
 <div layout:fragment="content" class="container-fluid px-2 px-md-4">
   <div class="page-header min-height-300 border-radius-xl mt-4"
@@ -24,16 +23,51 @@
     </div>
   </div>
 
-
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
+  <script
+      src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.17/index.global.min.js"></script>
   <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function () {
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
+      const month = [[${month}]] ? [[${month}]] - 1 : new Date().getMonth();
+      const year = [[${year}]] ? [[${year}]] : new Date().getFullYear();
+      const now = new Date(year, month);
+      let calendarEl = document.getElementById('calendar');
+      let calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            events: [[${calendarList}]]
+            initialDate: now.getTime(),
+            headerToolbar: {
+              right: "today,customPrevButton,customNextButton"
+            },
+            customButtons: {
+              customPrevButton: {
+                text: "prev",
+                click: () => {
+                  now.setMonth(now.getMonth() - 1)
+                  const url = window.location.origin + window.location.pathname;
+                  window.location.href = `${url}?year=${now.getFullYear()}&month=${now.getMonth() + 1}`
+                }
+              }, customNextButton: {
+                text: "next",
+                click: () => {
+                  now.setMonth(now.getMonth() + 1)
+                  const url = window.location.origin + window.location.pathname;
+                  window.location.href = `${url}?year=${now.getFullYear()}&month=${now.getMonth() + 1}`
+
+                }
+              }
+
+            },
+            events: [[${calendarList}]],
+            datesSet: (event, context) => {
+              const year = event.start.getFullYear();
+              const month = event.start.getMonth() + 1;
+              const url = window.location.origin + window.location.pathname;
+              // window.location.href = `${url}?year=${year}&month=${month}`
+            }
           })
       ;
       calendar.render();
+
     });
   </script>
 </div>
