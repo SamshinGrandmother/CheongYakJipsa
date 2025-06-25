@@ -1,0 +1,50 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/MainBody.html}">
+<div layout:fragment="content" class="container-fluid px-2 px-md-4">
+  <div class="page-header min-height-300 border-radius-xl mt-4"
+       style="background-image: url('https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');">
+    <span class="mask  bg-gradient-dark  opacity-6"></span>
+    <div class="card card-body mx-2 mx-md-2 mt-n6">
+      <div class="row">
+        <div class="col-12 col-xl-12">
+          <div class="card card-plain h-100">
+            <div class="card-header pb-0 p-3">
+              <div class="row">
+                <div class="col-md-12 d-flex align-items-center">
+                  <h6 class="mb-0">비밀번호 재확인</h6>
+                </div>
+              </div>
+            </div>
+            <form action="">
+              <div class="card-body p-3">
+                <ul class="list-group">
+                  <li class="list-group-item border-0 ps-0 text-sm">
+                    <div class="row">
+                      <div class="col-4 d-flex justify-content-end align-items-center ">
+                        <strong class="text-dark">비밀번호 확인:</strong>
+                      </div>
+                      <div class="col-4">
+                        <input type="password"
+                               class="form-control form-control-sm form-control-border"
+                               name="passwordConfirm">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+
+                <div class="d-flex justify-content-end mt-3">
+                  <button type="submit" id="password-change-button"
+                          class="btn btn-primary btn-sm bg-gradient-dark">확인
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</html>
