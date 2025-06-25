@@ -1,6 +1,7 @@
 package me.synn3r.jipsa.core.config.security;
 
 import lombok.RequiredArgsConstructor;
+import me.synn3r.jipsa.core.component.security.ProfileVerificationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -8,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -20,8 +22,10 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
   private final AuthenticationSuccessHandler successHandler;
   private final AuthenticationFailureHandler failureHandler;
+  private final ProfileVerificationFilter profileVerificationFilter;
 
   @Bean
   public String userNameParameter() {
@@ -61,6 +65,7 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
+      .addFilterBefore(profileVerificationFilter, AuthorizationFilter.class)
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
       .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
         .usernameParameter(userNameParameter())
