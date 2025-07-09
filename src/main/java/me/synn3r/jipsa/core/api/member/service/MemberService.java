@@ -1,5 +1,6 @@
 package me.synn3r.jipsa.core.api.member.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import me.synn3r.jipsa.core.api.member.domain.MemberRequest;
 import me.synn3r.jipsa.core.api.member.domain.MemberResponse;
@@ -8,18 +9,20 @@ import me.synn3r.jipsa.core.api.member.domain.MemberSearchCondition;
 public interface MemberService {
 
 
-  List<MemberResponse> findMembers(MemberSearchCondition memberSearchCondition);
+    List<MemberResponse> findMembers(MemberSearchCondition memberSearchCondition);
 
-  MemberResponse findMember(long id);
+    MemberResponse findMember(long id);
 
-  long saveMember(MemberRequest memberRequest);
+    void verifyMember(HttpServletRequest request, String password);
 
-  void updateMember(MemberRequest memberRequest);
+    long saveMember(MemberRequest memberRequest);
 
-  void updatePassword(MemberRequest memberRequest);
+    void updateMember(MemberRequest memberRequest);
 
-  void deleteMember(long id);
+    void updatePassword(MemberRequest memberRequest);
 
-  MemberResponse findMemberByUserId(String username);
+    void deleteMember(long id);
+
+    MemberResponse findMemberByUserId(String username);
 
 }

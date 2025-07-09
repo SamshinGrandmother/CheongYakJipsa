@@ -1,10 +1,15 @@
 package me.synn3r.jipsa.core.mvc.base;
 
+import jakarta.servlet.http.HttpServletRequest;
+import java.net.URI;
 import me.synn3r.jipsa.core.api.member.domain.MemberRequest;
 import me.synn3r.jipsa.core.api.member.domain.MemberResponse;
 import me.synn3r.jipsa.core.api.member.service.MemberService;
 import me.synn3r.jipsa.core.component.security.DefaultUserDetails;
 import me.synn3r.jipsa.core.component.security.Role;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,11 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class LoginController {
 
-  private final MemberService memberService;
+    private final MemberService memberService;
 
-  public LoginController(MemberService memberService) {
-    this.memberService = memberService;
-  }
+    public LoginController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
   @GetMapping(value = {"/", "/login"})
   public String loginPage(Model model,
@@ -29,25 +34,45 @@ public class LoginController {
     return "pages/SignIn";
   }
 
-  @GetMapping("/signup")
-  public String registerPage(Model model) {
+    @GetMapping("/signup")
+    public String registerPage(Model model) {
 
-    MemberRequest member = new MemberRequest();
-    member.setRole(Role.NORMAL);
-    model.addAttribute("signupForm", member);
-    return "pages/SignUp";
-  }
+        MemberRequest member = new MemberRequest();
+        member.setRole(Role.NORMAL);
+        model.addAttribute("signupForm", member);
+        return "pages/SignUp";
+    }
 
-  @GetMapping("/profile")
-  public String profilePage(Model model) {
+    @GetMapping("/profile/verify")
+    public String profileVerifyPage(Model model,
+      @RequestParam(value = "reason", required = false) String reason) {
+        model.addAttribute("reason", reason);
+        return "pages/VerifyProfile";
+    }
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    DefaultUserDetails user = (DefaultUserDetails) authentication.getPrincipal();
+    @PostMapping("/profile/verify")
+    public ResponseEntity<?> verifyProfile(HttpServletRequest request, @RequestParam String password) {
+        try {
+            memberService.verifyMember(request, password);
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.PERMANENT_REDIRECT)
+              .location(URI.create("/profile/verify?reason=login.notfound")).build();
+        }
 
-    MemberResponse member = memberService.findMemberByUserId(user.getUsername());
-    member.setRole(Role.NORMAL);
-    model.addAttribute("profileForm", member);
-    return "pages/Profile";
-  }
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
+          .location(URI.create("/profile")).build();
+    }
+
+    @GetMapping("/profile")
+    public String profilePage(Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        DefaultUserDetails user = (DefaultUserDetails) authentication.getPrincipal();
+
+        MemberResponse member = memberService.findMemberByUserId(user.getUsername());
+        member.setRole(Role.NORMAL);
+        model.addAttribute("profileForm", member);
+        return "pages/Profile";
+    }
 
 }

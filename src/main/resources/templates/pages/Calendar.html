@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/MainBody.html}">
+<head>
+</head>
+<div layout:fragment="content" class="container-fluid px-2 px-md-4">
+  <div class="page-header min-height-300 border-radius-xl mt-4"
+       style="background-image: url('https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');">
+    <span class="mask  bg-gradient-dark  opacity-6"></span>
+  </div>
+  <div class="card card-body mx-2 mx-md-2 mt-n6">
+    <div class="row gx-4 mb-2">
+      <div class="col-auto my-auto">
+        <div class="h-100">
+          <h5 class="mb-1">
+            캘린더
+          </h5>
+        </div>
+      </div>
+    </div>
+    <div class="row gx-4 mb-2">
+      <div id='calendar'></div>
+    </div>
+  </div>
+
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
+  <script
+      src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.17/index.global.min.js"></script>
+  <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+      const month = [[${month}]] ? [[${month}]] - 1 : new Date().getMonth();
+      const year = [[${year}]] ? [[${year}]] : new Date().getFullYear();
+      const now = new Date(year, month);
+      let calendarEl = document.getElementById('calendar');
+      let calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            initialDate: now.getTime(),
+            headerToolbar: {
+              right: "today,customPrevButton,customNextButton"
+            },
+            customButtons: {
+              customPrevButton: {
+                text: "prev",
+                click: () => {
+                  now.setMonth(now.getMonth() - 1)
+                  const url = window.location.origin + window.location.pathname;
+                  window.location.href = `${url}?year=${now.getFullYear()}&month=${now.getMonth() + 1}`
+                }
+              }, customNextButton: {
+                text: "next",
+                click: () => {
+                  now.setMonth(now.getMonth() + 1)
+                  const url = window.location.origin + window.location.pathname;
+                  window.location.href = `${url}?year=${now.getFullYear()}&month=${now.getMonth() + 1}`
+
+                }
+              }
+
+            },
+            events: [[${calendarList}]],
+            datesSet: (event, context) => {
+              const year = event.start.getFullYear();
+              const month = event.start.getMonth() + 1;
+              const url = window.location.origin + window.location.pathname;
+              // window.location.href = `${url}?year=${year}&month=${month}`
+            }
+          })
+      ;
+      calendar.render();
+
+    });
+  </script>
+</div>
