@@ -15,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -27,13 +26,13 @@ public class LoginController {
         this.memberService = memberService;
     }
 
-    @GetMapping(value = {"/", "/login"})
-    public String loginPage(Model model,
-      @RequestParam(value = "reason", required = false) String reason) {
-        model.addAttribute("loginForm", new LoginForm());
-        model.addAttribute("reason", reason);
-        return "pages/SignIn";
-    }
+  @GetMapping(value = {"/", "/login"})
+  public String loginPage(Model model,
+    @RequestParam(value = "reason", required = false) String reason) {
+    model.addAttribute("loginForm", new LoginForm());
+    model.addAttribute("reason", reason);
+    return "pages/SignIn";
+  }
 
     @GetMapping("/signup")
     public String registerPage(Model model) {
