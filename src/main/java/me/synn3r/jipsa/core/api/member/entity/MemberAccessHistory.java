@@ -29,34 +29,50 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Immutable
 public class MemberAccessHistory {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Comment("사용자 및 관리자 접속 기록 식별자")
-  @Column(name = "member_access_history_id")
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Comment("사용자 및 관리자 접속 기록 식별자")
+    @Column(name = "member_access_history_id")
+    private Long id;
 
-  @Enumerated(EnumType.STRING)
-  @Comment("사용자 및 관리자 접속 시도 결과")
-  private ResultType resultType;
+    @Enumerated(EnumType.STRING)
+    @Comment("사용자 및 관리자 접속 시도 결과")
+    private ResultType resultType;
 
-  @ManyToOne
-  @JoinColumn(name = "member_access_history_member_id", nullable = false, updatable = false)
-  @Comment("접속 시도한 사용자 및 관리자")
-  private Member member;
+    @ManyToOne
+    @JoinColumn(name = "member_access_history_member_id", updatable = false)
+    @Comment("접속 시도한 사용자 및 관리자")
+    private Member member;
 
-  @Enumerated(EnumType.STRING)
-  @Comment("접속 실패 시 실패 분류")
-  private AuthenticationFailureType failureType;
+    @Column(name = "member_access_history_member_user_id", nullable = false, updatable = false)
+    @Comment("존재하지 않는 ID로 로그인 시 기록용 컬럼")
+    private String memberId;
 
-  @CreatedDate
-  @Column(nullable = false, updatable = false)
-  @Comment("접속 시도 시각")
-  private LocalDateTime accessAt;
+    @Enumerated(EnumType.STRING)
+    @Comment("접속 실패 시 실패 분류")
+    private AuthenticationFailureType failureType;
 
-  public MemberAccessHistory(Member member, ResultType resultType,
-    AuthenticationFailureType failureType) {
-    this.member = member;
-    this.resultType = resultType;
-    this.failureType = failureType;
-  }
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    @Comment("접속 시도 시각")
+    private LocalDateTime accessAt;
+
+
+    public MemberAccessHistory(Member member, String memberId, ResultType resultType,
+      AuthenticationFailureType failureType) {
+        this.memberId = memberId;
+        if (member != null) {
+            this.member = member;
+            this.memberId = member.getUserId();
+        }
+        this.resultType = resultType;
+        this.failureType = failureType;
+    }
+//
+//    public MemberAccessHistory(String memberId, ResultType resultType,
+//      AuthenticationFailureType failureType) {
+//        this.memberId = memberId;
+//        this.resultType = resultType;
+//        this.failureType = failureType;
+//    }
 }

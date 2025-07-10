@@ -8,12 +8,15 @@ import me.synn3r.jipsa.core.component.security.enumerations.AuthenticationFailur
 
 public interface MemberAccessService {
 
-  List<MemberAccessHistoryResponse> getMemberAccessHistory(
-    MemberAccessSearchCondition searchCondition);
+    List<MemberAccessHistoryResponse> getMemberAccessHistory(
+      MemberAccessSearchCondition searchCondition);
 
-  void saveMemberAccessHistory(Member member);
+    void saveMemberAccessHistory(Member member);
 
-  void saveMemberAccessFailureHistory(Member member,
-    AuthenticationFailureType authenticationFailureType);
+    void saveMemberAccessFailureHistory(Member member,
+      AuthenticationFailureType authenticationFailureType);
+
+    void saveMemberAccessFailureHistory(String memberId,
+      AuthenticationFailureType authenticationFailureType);
 
 }

@@ -9,10 +9,10 @@ import me.synn3r.jipsa.core.api.member.domain.MemberSearchCondition;
 import me.synn3r.jipsa.core.api.member.entity.Member;
 import me.synn3r.jipsa.core.api.member.entity.mapper.MemberMapper;
 import me.synn3r.jipsa.core.api.member.repository.MemberRepository;
-import me.synn3r.jipsa.core.component.security.DefaultUserDetails;
 import me.synn3r.jipsa.core.component.security.enumerations.AuthenticationFailureType;
 import me.synn3r.jipsa.core.component.security.logging.AuthenticationFailureLogger;
 import me.synn3r.jipsa.core.component.security.logging.AuthenticationSuccessLogger;
+import me.synn3r.jipsa.core.component.security.userdetails.DefaultUserDetails;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -109,7 +109,11 @@ public class MemberServiceImpl implements MemberService, AuthenticationSuccessLo
     public void saveAuthenticationFailureHistory(String username,
       AuthenticationFailureType authenticationFailureType) {
         Member member = memberRepository.findByUserId(username);
-        memberAccessService.saveMemberAccessFailureHistory(member, authenticationFailureType);
+        if (member != null) {
+            memberAccessService.saveMemberAccessFailureHistory(member, authenticationFailureType);
+            return;
+        }
+        memberAccessService.saveMemberAccessFailureHistory(username, authenticationFailureType);
     }
 
     @Override

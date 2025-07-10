@@ -15,37 +15,43 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MemberAccessServiceImpl implements MemberAccessService {
 
-  private final MemberAccessHistoryMapper memberAccessHistoryMapper;
-  private final MemberAccessHistoryRepository memberAccessHistoryRepository;
+    private final MemberAccessHistoryMapper memberAccessHistoryMapper;
+    private final MemberAccessHistoryRepository memberAccessHistoryRepository;
 
-  public MemberAccessServiceImpl(MemberAccessHistoryMapper memberAccessHistoryMapper,
-    MemberAccessHistoryRepository memberAccessHistoryRepository) {
-    this.memberAccessHistoryMapper = memberAccessHistoryMapper;
-    this.memberAccessHistoryRepository = memberAccessHistoryRepository;
-  }
+    public MemberAccessServiceImpl(MemberAccessHistoryMapper memberAccessHistoryMapper,
+      MemberAccessHistoryRepository memberAccessHistoryRepository) {
+        this.memberAccessHistoryMapper = memberAccessHistoryMapper;
+        this.memberAccessHistoryRepository = memberAccessHistoryRepository;
+    }
 
-  @Override
-  public List<MemberAccessHistoryResponse> getMemberAccessHistory(
-    MemberAccessSearchCondition searchCondition) {
-    return memberAccessHistoryRepository.getMemberAccessResponseList(searchCondition);
-  }
+    @Override
+    public List<MemberAccessHistoryResponse> getMemberAccessHistory(
+      MemberAccessSearchCondition searchCondition) {
+        return memberAccessHistoryRepository.getMemberAccessResponseList(searchCondition);
+    }
 
-  @Override
-  @Transactional
-  public void saveMemberAccessHistory(Member member) {
-    memberAccessHistoryRepository.save(
-      memberAccessHistoryMapper.toEntity(member, ResultType.SUCCESS));
-  }
+    @Override
+    @Transactional
+    public void saveMemberAccessHistory(Member member) {
+        memberAccessHistoryRepository.save(
+          memberAccessHistoryMapper.toEntity(member, ResultType.SUCCESS));
+    }
 
-  @Override
-  @Transactional
-  public void saveMemberAccessFailureHistory(Member member,
-    AuthenticationFailureType authenticationFailureType) {
+    @Override
+    @Transactional
+    public void saveMemberAccessFailureHistory(Member member,
+      AuthenticationFailureType authenticationFailureType) {
 
-    memberAccessHistoryRepository.save(
-      memberAccessHistoryMapper.toEntity(member, ResultType.FAILURE, authenticationFailureType));
+        memberAccessHistoryRepository.save(
+          memberAccessHistoryMapper.toEntity(member, ResultType.FAILURE, authenticationFailureType));
 
-  }
+    }
+
+    @Override
+    public void saveMemberAccessFailureHistory(String memberId, AuthenticationFailureType authenticationFailureType) {
+        memberAccessHistoryRepository.save(
+          memberAccessHistoryMapper.toEntity(memberId, ResultType.FAILURE, authenticationFailureType));
+    }
 
 
 }
