@@ -52,10 +52,10 @@ dependencies {
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
     implementation "com.querydsl:querydsl-core:${querydslVersion}"
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation "org.mariadb.jdbc:mariadb-java-client:${mariaDBVersion}"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocOpenapiStarterWebmvcUi}"
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor(
             "org.springframework.boot:spring-boot-configuration-processor",
             "com.querydsl:querydsl-apt:${querydslVersion}:jakarta",
