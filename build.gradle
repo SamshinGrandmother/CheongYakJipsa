@@ -57,13 +57,13 @@ dependencies {
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor(
+            "org.projectlombok:lombok:${lombokVersion}",
             "org.springframework.boot:spring-boot-configuration-processor",
             "com.querydsl:querydsl-apt:${querydslVersion}:jakarta",
             "jakarta.annotation:jakarta.annotation-api",
             "jakarta.persistence:jakarta.persistence-api",
             "org.projectlombok:lombok-mapstruct-binding:${lombokMapStructVersion}",
             "org.mapstruct:mapstruct-processor:${mapstructVersion}",
-            "org.projectlombok:lombok:${lombokVersion}",
     )
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.batch:spring-batch-test'
