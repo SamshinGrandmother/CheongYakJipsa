@@ -32,6 +32,7 @@ ext {
     set('jasyptVersion', "3.0.5")
     set('springCloudDependenciesVersion', "2023.0.5")
     set('feignClientVersion', "4.0.3")
+    set('mariaDBVersion', "3.5.4")
 }
 
 dependencies {
@@ -52,7 +53,7 @@ dependencies {
     implementation "com.querydsl:querydsl-core:${querydslVersion}"
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.mariadb.jdbc:mariadb-java-client:3.5.2'
+    implementation "org.mariadb.jdbc:mariadb-java-client:${mariaDBVersion}"
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
     annotationProcessor(
             "org.springframework.boot:spring-boot-configuration-processor",
