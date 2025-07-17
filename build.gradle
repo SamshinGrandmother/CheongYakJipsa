@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.0'
     id 'io.spring.dependency-management' version '1.1.5'
+    id 'org.owasp.dependencycheck' version '8.4.0'
 }
 
 group = 'me.synn3r'
@@ -12,6 +13,10 @@ java {
 }
 
 configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -91,13 +96,26 @@ compileJava {
     ]
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs += querydslSrcDir
+        }
+    }
+}
+
 tasks {
     clean {
         delete file(querydslSrcDir)
     }
 
+    tasks.named('jar') {
+        enabled = false
+    }
+
     test {
         useJUnitPlatform()
+        maxParallelForks = Runtime.runtime.availableProcessors() / 2
         jvmArgs '-Xshare:off'
     }
 }
