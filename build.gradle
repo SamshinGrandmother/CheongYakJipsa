@@ -40,7 +40,6 @@ dependencies {
     implementation "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:${thymeleafLayoutVersion}"
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//    implementation 'org.springframework.boot:spring-boot-starter-integration'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-quartz'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -95,9 +94,8 @@ tasks {
         delete file(querydslSrcDir)
     }
 
-    // OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
     test {
         useJUnitPlatform()
-        jvmArgs '-Xshare:off' // JVM arg option
+        jvmArgs '-Xshare:off'
     }
 }
