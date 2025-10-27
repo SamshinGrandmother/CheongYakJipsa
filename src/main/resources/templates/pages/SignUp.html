@@ -4,121 +4,170 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/Body.html}">
 <div layout:fragment="content" class="page-header min-vh-100">
-  <div class="container">
-    <div class="row">
-      <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
-        <div class="card" style="backgroud-color : white">
-          <div class="card-header">
-            <h4 class="font-weight-bolder">Sign Up</h4>
-            <p class="mb-0">Enter your email and password to register</p>
-          </div>
-          <div class="card-body">
-            <form id="signup-form" role="form" th:object="${signupForm}" th:action="|${@securityConfig.saveMemberApi()}|" method="POST">
-              <div class="input-group input-group-outline mb-3">
-                <input type="text" class="form-control" th:field="*{name}" placeholder="name">
-                <input type="hidden" th:field="*{role}"/>
-              </div>
-              <div class="input-group input-group-outline mb-3">
-                <input type="text" class="form-control" th:field="*{userId}" placeholder="id">
-              </div>
-              <div class="input-group input-group-outline mb-3">
-                <input type="email" class="form-control" th:field="*{email}" placeholder="email">
-                <button type="button" class="btn btn-outline-secondary ms-2 btn-sm valid-tooltip" style="margin:0" id="verify-email">
-                  인증
-                </button>
-              </div>
-              <div class="input-group input-group-outline mb-3">
-                <input type="text" class="form-control" placeholder="인증번호 입력" id="verify-code">
-                <button type="button" class="btn btn-outline-secondary ms-2 btn-sm valid-tooltip" style="margin:0" id="check-verify-email">
-                  확인
-                </button>
-              </div>
-              <div class="input-group input-group-outline mb-3">
-                <input type="password" class="form-control" th:field="*{password}"
-                       placeholder="password">
-              </div>
-              <div class="input-group input-group-outline mb-3">
-                <input type="password" class="form-control" th:field="*{passwordConfirm}"
-                       placeholder="password check">
-              </div>
-              <div class="input-group input-group-outline mb-3">
-                <input type="text" class="form-control" th:field="*{phoneNumber}"
-                       placeholder="phone number">
-              </div>
-              <div class="form-check form-check-info text-start ps-0">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
-                       checked>
-                <label class="form-check-label" for="flexCheckDefault">
-                  I agree the <a href="javascript:;" class="text-dark font-weight-bolder">Terms and
-                  Conditions</a>
-                </label>
-              </div>
-              <div class="text-center">
-                <button type="submit" class="btn btn-lg bg-gradient-dark btn-lg w-100 mt-4 mb-0">
-                  Sign Up
-                </button>
-              </div>
-            </form>
-          </div>
-          <div class="card-footer text-center pt-0 px-lg-2 px-1">
-            <p class="mb-2 text-sm mx-auto">
-              Already have an account?
-              <a href="/" class="text-primary text-gradient font-weight-bold">Sign in</a>
-            </p>
-          </div>
+    <div class="container">
+        <div class="row  mt-5">
+            <div class="col-xl-12 col-lg-12 col-md-12 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-12">
+                <div class="card" style="backgroud-color : white">
+                    <div class="card-header">
+                        <h4 class="font-weight-bolder" th:text="#{index.signUp}">Sign Up</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="signup-form" role="form" th:object="${signupForm}"
+                              th:action="|${@securityConfig.saveMemberApi()}|" method="POST">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div th:if="${#fields.hasGlobalErrors()}">
+                                        <p class="text-danger field-error" th:each="err : ${#fields.globalErrors()}"
+                                           th:text="${err}">
+                                            글로벌 오류 메시지
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group input-group-outline mb-3"
+                                         th:classappend="${(#fields.hasErrors('userId') ? 'is-invalid ' : 'is-valid') + (#fields.hasErrors() ? ' is-filled' : '')}">
+                                        <label class="form-label" th:for="*{userId}"
+                                               th:text="#{index.signUp.userId}">사용자
+                                            ID</label>
+                                        <input type="text" class="form-control"
+                                               th:field="*{userId}"
+                                               th:classappend="${#fields.hasErrors('userId')} ? 'is-invalid' : 'is-valid'">
+                                        <div class="invalid-feedback" th:errors="*{userId}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group input-group-outline mb-3"
+                                         th:classappend="${(#fields.hasErrors('email') ? 'is-invalid ' : 'is-valid ') + (#fields.hasErrors() ? ' is-filled' : '')}">
+                                        <label class="form-label" th:for="*{email}"
+                                               th:text="#{index.signUp.email}">이메일</label>
+                                        <input type="text" class="form-control" th:field="*{email}"
+                                               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : 'is-valid'"
+                                        >
+                                        <div class="invalid-feedback" th:errors="*{email}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group input-group-outline mb-3"
+                                         th:classappend="${(#fields.hasErrors('name') ? 'is-invalid ' : 'is-valid ') + (#fields.hasErrors() ? ' is-filled' : '')}">
+                                        <label class="form-label" th:for="*{name}" th:text="#{index.signUp.name}">사용자
+                                            이름</label>
+                                        <input type="text" class="form-control" th:field="*{name}"
+                                               th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : 'is-valid'"
+                                        >
+                                        <div class="invalid-feedback" th:errors="*{name}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group input-group-outline mb-3"
+                                         th:classappend="${(#fields.hasErrors('password') ? 'is-invalid ' :'') + (#fields.hasErrors() ? ' is-filled' : '')}">
+                                        <label class="form-label" th:for="*{password}"
+                                               th:text="#{index.signUp.password}">비밀번호</label>
+                                        <input type="password" class="form-control" th:errorclass="field-error"
+                                               th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                                               th:field="*{password}">
+                                        <div class="invalid-feedback" th:errors="*{password}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group input-group-outline mb-3"
+                                         th:classappend="${(#fields.hasErrors('passwordConfirm') ? 'is-invalid ' : '') + (#fields.hasErrors() ? ' is-filled' : '')}">
+                                        <label class="form-label" th:for="*{passwordConfirm}"
+                                               th:text="#{index.signUp.passwordConfirm}">비밀번호
+                                            확인</label>
+                                        <input type="password" class="form-control" th:errorclass="field-error"
+                                               th:classappend="${#fields.hasErrors('passwordConfirm')} ? 'is-invalid'"
+                                               th:field="*{passwordConfirm}">
+                                        <div class="invalid-feedback" th:errors="*{passwordConfirm}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-check form-check-info text-start ps-0">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                       checked>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    I agree the <a href="javascript:;" class="text-dark font-weight-bolder">Terms
+                                    and
+                                    Conditions</a>
+                                </label>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit"
+                                        class="btn btn-lg bg-gradient-dark btn-lg w-100 mt-4 mb-0">
+                                    Sign Up
+                                </button>
+                            </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                <p class="mb-2 text-sm mx-auto">
+                    Already have an account?
+                    <a href="/" class="text-primary text-gradient font-weight-bold">Sign in</a>
+                </p>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <script>
+</div>
+</div>
+<!--    <script>-->
 
-    let isEmailVerified = false;
+<!--        let isEmailVerified = false;-->
 
-    $(function() {
+<!--        $(function () {-->
 
-      $('#verify-email').on('click', function(e){
+<!--            $('#verify-email').on('click', function (e) {-->
 
-        sendFetchRequest('POST', '/verify/email', {
-          email: $('#email').val(),
-        });
-      });
-
-
-
-      $('#edit-profile').on('submit', function(e) {
-        e.preventDefault();
-
-        const jsonObject = {
-          id: $('#id').val(),
-          email: $('#email').val(),
-          name: $('#name').val(),
-          password: $('#password').val(),
-          passwordConfirm: $('#passwordConfirm').val(),
-          phoneNumber: $('#phoneNumber').val(),
-          role: $('#role').val(),
-          isEmailVerified: isEmailVerified
-        };
-
-        sendFetchRequest('POST', '/members', jsonObject, () =>{
-          isEmailVerified = false;
-          $('#verify-code').val("");
-        });
+<!--                sendFetchRequest('POST', '/verify/email', {-->
+<!--                    email: $('#email').val(),-->
+<!--                });-->
+<!--            });-->
 
 
-      });
+<!--            $('#edit-profile').on('submit', function (e) {-->
+<!--                e.preventDefault();-->
 
-      $('#check-verify-email').on('click',function(){
+<!--                const jsonObject = {-->
+<!--                    id: $('#id').val(),-->
+<!--                    email: $('#email').val(),-->
+<!--                    name: $('#name').val(),-->
+<!--                    password: $('#password').val(),-->
+<!--                    passwordConfirm: $('#passwordConfirm').val(),-->
+<!--                    phoneNumber: $('#phoneNumber').val(),-->
+<!--                    role: $('#role').val(),-->
+<!--                    isEmailVerified: isEmailVerified-->
+<!--                };-->
 
-        sendFetchRequest('POST', '/check/email/code', {
-          email: $('input[name="email"]').val(),
-          verifyCode: $('input[name="verify-code"]').val(),
-        },() =>{
-          isEmailVerified = true;
-        });
+<!--                sendFetchRequest('POST', '/members', jsonObject, () => {-->
+<!--                    isEmailVerified = false;-->
+<!--                    $('#verify-code').val("");-->
+<!--                });-->
 
-      });
-    });
-  </script>
+
+<!--            });-->
+
+<!--            $('#check-verify-email').on('click', function () {-->
+
+<!--                sendFetchRequest('POST', '/check/email/code', {-->
+<!--                    email: $('input[name="email"]').val(),-->
+<!--                    verifyCode: $('input[name="verify-code"]').val(),-->
+<!--                }, () => {-->
+<!--                    isEmailVerified = true;-->
+<!--                });-->
+
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
 </div>
 
 
