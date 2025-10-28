@@ -1,9 +1,11 @@
 package me.synn3r.jipsa.core.mvc.base.domain;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import me.synn3r.jipsa.core.component.validation.domain.Password;
 
 @Getter
 @Setter
@@ -15,8 +17,9 @@ public class SignUpForm {
 	@NotBlank
 	@Email
 	private String email;
-	@NotBlank
-	private String password;
+
+	@Valid
+	private Password password = new Password();
 	@NotBlank
 	private String passwordConfirm;
 }
