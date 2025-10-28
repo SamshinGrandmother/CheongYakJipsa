@@ -12,7 +12,7 @@ import me.synn3r.jipsa.core.component.validation.validator.PasswordConfirmValida
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PasswordConfirmValidator.class)
 public @interface PasswordConfirmValid {
-	String message() default "{jakarta.validation.constraints.PasswordConfirm.message}";
+	String message() default "{jakarta.validation.constraints.signUp.passwordConfirm.message}";
 
 	Class[] groups() default {};
 

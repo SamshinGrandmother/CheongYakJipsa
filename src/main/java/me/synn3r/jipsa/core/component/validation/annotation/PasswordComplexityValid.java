@@ -12,7 +12,7 @@ import me.synn3r.jipsa.core.component.validation.validator.PasswordComplexityVal
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PasswordComplexityValidator.class)
 public @interface PasswordComplexityValid {
-	String message() default "{jakarta.validation.constraints.PasswordComplexity.message}";
+	String message() default "{jakarta.validation.constraints.signUp.passwordComplexity.message}";
 
 	Class[] groups() default {};
 
