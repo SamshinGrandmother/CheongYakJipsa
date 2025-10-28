@@ -67,27 +67,27 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="input-group input-group-outline mb-3"
-                                         th:classappend="${(#fields.hasErrors('password') ? 'is-invalid ' :'') + (#fields.hasErrors() ? ' is-filled' : '')}">
+                                         th:classappend="${(#fields.hasErrors('password.password') ? 'is-invalid ' :'') + (#fields.hasErrors() ? ' is-filled' : '')}">
                                         <label class="form-label" th:for="*{password.password}"
                                                th:text="#{index.signUp.password}">비밀번호</label>
                                         <input type="password" class="form-control" th:errorclass="field-error"
-                                               th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                                               th:classappend="${#fields.hasErrors('password.password')} ? 'is-invalid'"
                                                th:field="*{password.password}">
-                                        <div class="invalid-feedback" th:errors="*{password}"></div>
+                                        <div class="invalid-feedback" th:errors="*{password.password}"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="input-group input-group-outline mb-3"
-                                         th:classappend="${(#fields.hasErrors('passwordConfirm') ? 'is-invalid ' : '') + (#fields.hasErrors() ? ' is-filled' : '')}">
+                                         th:classappend="${(#fields.hasErrors('password.passwordConfirm') ? 'is-invalid ' : '') + (#fields.hasErrors() ? ' is-filled' : '')}">
                                         <label class="form-label" th:for="*{password.passwordConfirm}"
                                                th:text="#{index.signUp.passwordConfirm}">비밀번호
                                             확인</label>
                                         <input type="password" class="form-control" th:errorclass="field-error"
-                                               th:classappend="${#fields.hasErrors('passwordConfirm')} ? 'is-invalid'"
+                                               th:classappend="${#fields.hasErrors('password.passwordConfirm')} ? 'is-invalid'"
                                                th:field="*{password.passwordConfirm}">
-                                        <div class="invalid-feedback" th:errors="*{passwordConfirm}"></div>
+                                        <div class="invalid-feedback" th:errors="*{password.passwordConfirm}"></div>
                                     </div>
                                 </div>
                             </div>

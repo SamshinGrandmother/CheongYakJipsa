@@ -20,6 +20,4 @@ public class SignUpForm {
 
 	@Valid
 	private Password password = new Password();
-	@NotBlank
-	private String passwordConfirm;
 }
