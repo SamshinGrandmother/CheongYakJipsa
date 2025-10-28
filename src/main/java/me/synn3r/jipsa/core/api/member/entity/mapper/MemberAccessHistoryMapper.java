@@ -11,17 +11,25 @@ import org.mapstruct.Mappings;
 @Mapper
 public interface MemberAccessHistoryMapper {
 
-  @Mappings({
-    @Mapping(source = "member", target = "member"),
-    @Mapping(source = "resultType", target = "resultType")
-  })
-  MemberAccessHistory toEntity(Member member, ResultType resultType);
+    @Mappings({
+      @Mapping(source = "member", target = "member"),
+      @Mapping(source = "resultType", target = "resultType")
+    })
+    MemberAccessHistory toEntity(Member member, ResultType resultType);
 
-  @Mappings({
-    @Mapping(source = "member", target = "member"),
-    @Mapping(source = "resultType", target = "resultType"),
-    @Mapping(source = "authenticationFailureType", target = "failureType")
-  })
-  MemberAccessHistory toEntity(Member member, ResultType resultType,
-    AuthenticationFailureType authenticationFailureType);
+    @Mappings({
+      @Mapping(source = "member", target = "member"),
+      @Mapping(source = "resultType", target = "resultType"),
+      @Mapping(source = "authenticationFailureType", target = "failureType")
+    })
+    MemberAccessHistory toEntity(Member member, ResultType resultType,
+      AuthenticationFailureType authenticationFailureType);
+
+    @Mappings({
+      @Mapping(source = "memberId", target = "memberId"),
+      @Mapping(source = "resultType", target = "resultType"),
+      @Mapping(source = "authenticationFailureType", target = "failureType")
+    })
+    MemberAccessHistory toEntity(String memberId, ResultType resultType,
+      AuthenticationFailureType authenticationFailureType);
 }

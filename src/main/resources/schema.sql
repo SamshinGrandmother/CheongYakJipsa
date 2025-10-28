@@ -16,21 +16,22 @@ create table if not exists member
 
 create table if not exists member_access_history
 (
-    member_access_history_id        bigint auto_increment primary key comment '사용자 및 관리자 접속 기록 식별자',
-    result_type                     varchar(8) not null comment '사용자 및 관리자 접속 시도 결과',
-    member_access_history_member_id bigint     not null comment '접속 시도한 사용자 및 관리자',
-    failure_type                    varchar(32) comment '접속 실패 시 실패 분류 (Enum:AuthenticationFailureType)',
-    access_at                       timestamp  not null comment '접속 시도 시각'
+    member_access_history_id             bigint auto_increment primary key comment '사용자 및 관리자 접속 기록 식별자',
+    result_type                          varchar(8)  not null comment '사용자 및 관리자 접속 시도 결과',
+    member_access_history_member_id      bigint comment '접속 시도한 사용자 및 관리자',
+    member_access_history_member_user_id varchar(16) not null comment '존재하지 않는 ID로 로그인 시 기록용 컬럼',
+    failure_type                         varchar(32) comment '접속 실패 시 실패 분류 (Enum:AuthenticationFailureType)',
+    access_at                            timestamp   not null comment '접속 시도 시각'
 ) comment '사용자 및 관리자 접속 기록 테이블';
 
 create table if not exists house
 (
-    house_id          bigint auto_increment primary key comment '주택 ID',
-    name             varchar(128)  not null comment '주택명',
+    house_id         bigint auto_increment primary key comment '주택 ID',
+    name             varchar(128) not null comment '주택명',
     manage_number    bigint       not null comment '주택관리번호',
     apply_date_start date         not null comment '청약 접수 시작일',
     apply_date_end   date         not null comment '청약 접수 종료일',
-    house_type        varchar(16)  not null comment '주택구분코드',
+    house_type       varchar(16)  not null comment '주택구분코드',
     location_type    varchar(16)  not null comment '공급지역코드',
     address          varchar(255) not null comment '공급위치',
     url              varchar(255) not null comment '분양정보 URL'

@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.0'
     id 'io.spring.dependency-management' version '1.1.5'
+    id 'org.owasp.dependencycheck' version '8.4.0'
 }
 
 group = 'me.synn3r'
@@ -12,6 +13,10 @@ java {
 }
 
 configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -32,6 +37,8 @@ ext {
     set('jasyptVersion', "3.0.5")
     set('springCloudDependenciesVersion', "2023.0.5")
     set('feignClientVersion', "4.0.3")
+    set('mariaDBVersion', "3.5.4")
+    set('springdocOpenapiStarterWebmvcUi', "2.6.0")
 }
 
 dependencies {
@@ -40,7 +47,6 @@ dependencies {
     implementation "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:${thymeleafLayoutVersion}"
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//    implementation 'org.springframework.boot:spring-boot-starter-integration'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-quartz'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -51,19 +57,18 @@ dependencies {
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
     implementation "com.querydsl:querydsl-core:${querydslVersion}"
+    implementation "org.mariadb.jdbc:mariadb-java-client:${mariaDBVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocOpenapiStarterWebmvcUi}"
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.mariadb.jdbc:mariadb-java-client:3.5.2'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.5'
     annotationProcessor(
+            "org.projectlombok:lombok:${lombokVersion}",
             "org.springframework.boot:spring-boot-configuration-processor",
             "com.querydsl:querydsl-apt:${querydslVersion}:jakarta",
             "jakarta.annotation:jakarta.annotation-api",
             "jakarta.persistence:jakarta.persistence-api",
             "org.projectlombok:lombok-mapstruct-binding:${lombokMapStructVersion}",
             "org.mapstruct:mapstruct-processor:${mapstructVersion}",
-            "org.projectlombok:lombok:${lombokVersion}",
     )
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.batch:spring-batch-test'
@@ -91,14 +96,26 @@ compileJava {
     ]
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs += querydslSrcDir
+        }
+    }
+}
+
 tasks {
     clean {
         delete file(querydslSrcDir)
     }
 
-    // OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+    tasks.named('jar') {
+        enabled = false
+    }
+
     test {
         useJUnitPlatform()
-        jvmArgs '-Xshare:off' // JVM arg option
+        maxParallelForks = Runtime.runtime.availableProcessors() / 2
+        jvmArgs '-Xshare:off'
     }
 }
