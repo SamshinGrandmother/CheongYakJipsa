@@ -1,19 +1,18 @@
 package me.synn3r.jipsa.core.config.security;
 
 import lombok.RequiredArgsConstructor;
-import me.synn3r.jipsa.core.component.security.ProfileVerificationFilter;
+import me.synn3r.jipsa.core.config.security.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -23,29 +22,8 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  private final AuthenticationSuccessHandler successHandler;
-  private final AuthenticationFailureHandler failureHandler;
-  private final ProfileVerificationFilter profileVerificationFilter;
-
-  @Bean
-  public String userNameParameter() {
-    return "userId";
-  }
-
-  @Bean
-  public String passwordParameter() {
-    return "password";
-  }
-
-  @Bean
-  public String loginUrl() {
-    return "/login";
-  }
-
-  @Bean
-  public String logoutUrl() {
-    return "/logout";
-  }
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  private final AuthenticationManager authenticationManager;
 
   @Bean
   public String saveMemberApi() {
@@ -53,43 +31,29 @@ public class SecurityConfig {
   }
 
   @Bean
-  public RequestMatcher loginAntMatcher() {
-    return new AntPathRequestMatcher(loginUrl(), HttpMethod.POST.name());
-  }
-
-  @Bean
-  public RequestMatcher logoutMatcher() {
-    return new AntPathRequestMatcher(logoutUrl(), HttpMethod.GET.name());
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+    throws Exception {
+    return configuration.getAuthenticationManager();
   }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
-      .addFilterBefore(profileVerificationFilter, AuthorizationFilter.class)
+      .csrf(AbstractHttpConfigurer::disable)
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-      .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
-        .usernameParameter(userNameParameter())
-        .passwordParameter(passwordParameter())
-        .loginPage(loginUrl())
-        .failureHandler(failureHandler)
-        .successHandler(successHandler)
-        .loginProcessingUrl(loginUrl())
-      )
+      .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+      .formLogin(AbstractHttpConfigurer::disable)
+      .httpBasic(AbstractHttpConfigurer::disable)
       .authorizeHttpRequests(authorize -> authorize
-        .requestMatchers(loginUrl(), "/", "/bootstrap/**", "/pages/**", "/signup", "/swagger-ui/**",
-          "/v3/api-docs/**")
+        .requestMatchers("/auth/login", "/swagger-ui/**", "/v3/api-docs/**")
         .permitAll()
         .requestMatchers(HttpMethod.POST, saveMemberApi()).permitAll()
         .requestMatchers(HttpMethod.POST, "/verify/email", "/check/email/code").permitAll()
-        .requestMatchers("/**")
+        .anyRequest()
         .authenticated())
-      .logout(customize -> customize
-        .logoutRequestMatcher(logoutMatcher())
-        .logoutSuccessUrl(loginUrl()))
-      .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
-      .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
-        .rememberMeParameter("rememberMe")
-        .tokenValiditySeconds(3600))
+      .logout(AbstractHttpConfigurer::disable)
+      .authenticationManager(authenticationManager)
+      .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
     ;
 
     return http.build();

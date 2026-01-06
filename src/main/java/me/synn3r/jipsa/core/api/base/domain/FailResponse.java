@@ -8,10 +8,11 @@ import lombok.Getter;
 @Getter
 public class FailResponse implements Response {
 
+  private String code;
   private String message;
 
 
-  public static FailResponse of(String message) {
-    return new FailResponse(message);
+  public static FailResponse of(String code, String message) {
+    return new FailResponse(code, message);
   }
 }

@@ -17,10 +17,8 @@
 - 🧪 Junit 5.10
 - 🌶️ Lombok 1.18.32
 
-### Frontend 😀
-- 🕘 Thymeleaf
-- 🎨 Material Design
-
-
-## RoadMap
+### API & Auth 🔐
+- 🧭 RESTful Spring Boot 3.3
+- 🔑 JWT 기반 토큰 인증
+- 🌐 OpenAPI (Swagger UI)
 

@@ -32,7 +32,7 @@ public enum LocationType {
         return type;
       }
     }
-    throw new IllegalArgumentException(name + " is not a valid location type");
+    throw new IllegalArgumentException("location.invalid");
   }
 
 }

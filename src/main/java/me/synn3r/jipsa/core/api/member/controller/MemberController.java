@@ -44,7 +44,7 @@ public class MemberController {
   @PostMapping("/members")
   @Operation(summary = "회원가입", description = "회원가입용 사용자 save API")
   public ResponseEntity<Long> saveMember(
-    @Validated({Insert.class}) MemberRequest memberRequest) {
+    @Validated({Insert.class}) @RequestBody MemberRequest memberRequest) {
     return ResponseEntity.ok().body(memberService.saveMember(memberRequest));
   }
 

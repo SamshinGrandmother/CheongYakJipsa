@@ -1,6 +1,5 @@
 package me.synn3r.jipsa.core.api.member.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.NoSuchElementException;
 import me.synn3r.jipsa.core.api.member.domain.MemberRequest;
@@ -12,10 +11,9 @@ import me.synn3r.jipsa.core.api.member.repository.MemberRepository;
 import me.synn3r.jipsa.core.component.security.enumerations.AuthenticationFailureType;
 import me.synn3r.jipsa.core.component.security.logging.AuthenticationFailureLogger;
 import me.synn3r.jipsa.core.component.security.logging.AuthenticationSuccessLogger;
-import me.synn3r.jipsa.core.component.security.userdetails.DefaultUserDetails;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,13 +28,16 @@ public class MemberServiceImpl implements MemberService, AuthenticationSuccessLo
     private final MemberMapper memberMapper;
     private final PasswordEncoder passwordEncoder;
     private final MemberAccessService memberAccessService;
+    private final MessageSource messageSource;
 
     public MemberServiceImpl(MemberRepository memberRepository, MemberMapper memberMapper,
-      PasswordEncoder passwordEncoder, MemberAccessService memberAccessService) {
+      PasswordEncoder passwordEncoder, MemberAccessService memberAccessService,
+      MessageSource messageSource) {
         this.memberRepository = memberRepository;
         this.memberMapper = memberMapper;
         this.passwordEncoder = passwordEncoder;
         this.memberAccessService = memberAccessService;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -47,25 +48,14 @@ public class MemberServiceImpl implements MemberService, AuthenticationSuccessLo
     @Override
     public MemberResponse findMember(long id) {
         return memberMapper.toMemberResponse(memberRepository.findById(id)
-          .orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다. ")));
-    }
-
-    @Override
-    public void verifyMember(HttpServletRequest request, String password) {
-        DefaultUserDetails details = (DefaultUserDetails) SecurityContextHolder.getContext().getAuthentication()
-          .getPrincipal();
-        if (!passwordEncoder.matches(password, details.getPassword())) {
-            throw new BadCredentialsException("비밀번호가 일치하지 않습니다. ");
-        }
-
-        request.getSession(false).setAttribute("PROFILE_VERIFIED", Boolean.TRUE);
+          .orElseThrow(() -> new NoSuchElementException(getMessage("member.not-found"))));
     }
 
     @Override
     @Transactional
     public long saveMember(MemberRequest memberRequest) {
         if (memberRepository.existsMemberByEmail(memberRequest.getEmail())) {
-            throw new DuplicateKeyException("이미 존재하는 이메일 입니다. ");
+            throw new DuplicateKeyException(getMessage("member.email.duplicate"));
         }
         Member member = memberRepository.save(
           memberMapper.toEntity(memberRequest, passwordEncoder.encode(
@@ -77,7 +67,7 @@ public class MemberServiceImpl implements MemberService, AuthenticationSuccessLo
     @Transactional
     public void updateMember(MemberRequest memberRequest) {
         Member member = memberRepository.findById(memberRequest.getId())
-          .orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다. "));
+          .orElseThrow(() -> new NoSuchElementException(getMessage("member.not-found")));
 
         member.updateMemberInfo(memberRequest);
 
@@ -87,7 +77,7 @@ public class MemberServiceImpl implements MemberService, AuthenticationSuccessLo
     @Transactional
     public void updatePassword(MemberRequest memberRequest) {
         Member member = memberRepository.findById(memberRequest.getId())
-          .orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다. "));
+          .orElseThrow(() -> new NoSuchElementException(getMessage("member.not-found")));
         member.updatePassword(passwordEncoder.encode(memberRequest.getPassword()));
     }
 
@@ -95,7 +85,7 @@ public class MemberServiceImpl implements MemberService, AuthenticationSuccessLo
     @Transactional
     public void deleteMember(long id) {
         Member member = memberRepository.findById(id)
-          .orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다. "));
+          .orElseThrow(() -> new NoSuchElementException(getMessage("member.not-found")));
         member.delete();
     }
 
@@ -121,5 +111,9 @@ public class MemberServiceImpl implements MemberService, AuthenticationSuccessLo
     public void saveAuthenticationSuccessHistory(UserDetails userDetails) {
         Member member = memberRepository.findByUserId(userDetails.getUsername());
         memberAccessService.saveMemberAccessHistory(member);
+    }
+
+    private String getMessage(String code) {
+        return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
     }
 }

@@ -37,7 +37,7 @@ public enum AuthenticationFailureType {
         return value;
       }
     }
-    throw new IllegalArgumentException("열거형에 해당하는 예외가 없습니다. ");
+    throw new IllegalArgumentException("auth.failure-type.invalid");
   }
 
   public String getResponseText() {

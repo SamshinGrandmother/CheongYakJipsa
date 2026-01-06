@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = PasswordConfirmValidator.class)
 public @interface PasswordConfirm {
 
-  String message() default "비밀번호가 일치하지 않습니다.";
+  String message() default "{validation.member.password.match}";
 
   Class<?>[] groups() default {};
 

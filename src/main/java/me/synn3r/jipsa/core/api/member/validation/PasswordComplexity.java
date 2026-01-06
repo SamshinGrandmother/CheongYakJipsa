@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = PasswordComplexityValidator.class)
 public @interface PasswordComplexity {
 
-  String message() default "비밀번호는 대/소문자, 숫자, 특수문자 포함 8글자 이상이어야 합니다.";
+  String message() default "{validation.member.password.complexity}";
 
   Class[] groups() default {};
 

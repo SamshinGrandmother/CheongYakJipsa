@@ -14,13 +14,12 @@ public class SwaggerConfig {
   @Bean
   public OpenAPI openAPI() {
     return new OpenAPI()
-      .addSecurityItem(new SecurityRequirement().addList("SESSION"))
-      .components(new Components().addSecuritySchemes("SESSION",
+      .addSecurityItem(new SecurityRequirement().addList("JWT"))
+      .components(new Components().addSecuritySchemes("JWT",
         new SecurityScheme()
-          .name("SESSION")
-          .type(SecurityScheme.Type.APIKEY)
-          .in(SecurityScheme.In.HEADER)
-          .name("Cookie")))
+          .type(SecurityScheme.Type.HTTP)
+          .scheme("bearer")
+          .bearerFormat("JWT")))
       .info(apiInfo());
   }
 

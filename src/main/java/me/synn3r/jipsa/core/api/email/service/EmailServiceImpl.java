@@ -2,26 +2,27 @@ package me.synn3r.jipsa.core.api.email.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 @Service
 public class EmailServiceImpl implements EmailService {
 
   private final JavaMailSender emailSender;
-  private final TemplateEngine templateEngine;
+  private final MessageSource messageSource;
   private final Map<String, Integer> verifyCodes = new ConcurrentHashMap<>();
 
-  public EmailServiceImpl(JavaMailSender emailSender, TemplateEngine templateEngine) {
+  public EmailServiceImpl(JavaMailSender emailSender, MessageSource messageSource) {
     this.emailSender = emailSender;
-    this.templateEngine = templateEngine;
+    this.messageSource = messageSource;
   }
 
 
@@ -31,21 +32,17 @@ public class EmailServiceImpl implements EmailService {
     try {
       MimeMessage message = emailSender.createMimeMessage();
 
-      MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
+      MimeMessageHelper helper = new MimeMessageHelper(message, false, StandardCharsets.UTF_8.name());
       helper.setTo(email);
-      helper.setSubject("[쳥약집사] 이메일 인증번호 발송 메일입니다.");
+      helper.setSubject(getMessage("email.subject.verification"));
 
-      Context context = new Context();
       int randomNumber = createRandomNumber();
-      context.setVariables(Map.of("randomNumber", randomNumber));
-
-      String VerifyHtml = templateEngine.process("/email/verification", context);
-      helper.setText(VerifyHtml, true);
+      helper.setText(buildVerificationBody(randomNumber), true);
 
       verifyCodes.put(email, randomNumber);
       emailSender.send(message);
     } catch (MessagingException e) {
-      throw new RuntimeException("이메일 전송 중 문제가 발생했습니다.", e);
+      throw new RuntimeException(getMessage("email.send.failure"), e);
     }
 
   }
@@ -65,6 +62,16 @@ public class EmailServiceImpl implements EmailService {
     Random random = new Random();
     int number = 100000 + random.nextInt(900000);
     return number;
+  }
+
+  private String buildVerificationBody(int verificationCode) {
+    return "<p>" + getMessage("email.body.greeting") + "</p>" +
+      "<p>" + getMessage("email.body.description") + "</p>" +
+      "<h2>" + verificationCode + "</h2>";
+  }
+
+  private String getMessage(String code) {
+    return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
   }
 
 
