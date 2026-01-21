@@ -23,3 +23,13 @@ hs_err_pid*
 replay_pid*
 
 .idea
+
+# Gradle
+.gradle/
+build/
+
+# IntelliJ IDEA
+out/
+
+# Generated sources (QueryDSL, MapStruct - 이미 build/ 내부에 포함됨)
+/src/main/generated/

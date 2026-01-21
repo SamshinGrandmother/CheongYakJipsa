@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'idea'
     id 'org.springframework.boot' version '3.3.0'
     id 'io.spring.dependency-management' version '1.1.5'
     id 'org.owasp.dependencycheck' version '8.4.0'
@@ -32,26 +33,26 @@ ext {
     set('lombokVersion', "1.18.32")
     set('mapstructVersion', "1.5.5.Final")
     set('mockitoVersion', "5.12.0")
-    set('thymeleafExtraVersion', "3.1.2.RELEASE")
-    set('thymeleafLayoutVersion', "2.5.3")
     set('jasyptVersion', "3.0.5")
     set('springCloudDependenciesVersion', "2023.0.5")
     set('feignClientVersion', "4.0.3")
     set('mariaDBVersion', "3.5.4")
     set('springdocOpenapiStarterWebmvcUi', "2.6.0")
+    set('jjwtVersion', "0.12.5")
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation "org.thymeleaf.extras:thymeleaf-extras-springsecurity6:${thymeleafExtraVersion}"
-    implementation "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:${thymeleafLayoutVersion}"
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-quartz'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
     implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:${jasyptVersion}"
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign:${feignClientVersion}"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
@@ -84,10 +85,10 @@ dependencyManagement {
 }
 
 
-def querydslSrcDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
+def generatedSrcDir = layout.buildDirectory.dir("generated/sources/annotationProcessor/java/main").get().asFile
 
 compileJava {
-    options.generatedSourceOutputDirectory = querydslSrcDir
+    options.generatedSourceOutputDirectory = generatedSrcDir
     options.compilerArgs += [
             "-Amapstruct.defaultComponentModel=spring",
             "-Amapstruct.defaultInjectionStrategy=constructor",
@@ -99,16 +100,12 @@ compileJava {
 sourceSets {
     main {
         java {
-            srcDirs += querydslSrcDir
+            srcDirs += generatedSrcDir
         }
     }
 }
 
 tasks {
-    clean {
-        delete file(querydslSrcDir)
-    }
-
     tasks.named('jar') {
         enabled = false
     }
@@ -117,5 +114,14 @@ tasks {
         useJUnitPlatform()
         maxParallelForks = Runtime.runtime.availableProcessors() / 2
         jvmArgs '-Xshare:off'
+    }
+}
+
+idea {
+    module {
+        outputDir = file("${layout.buildDirectory.get()}/classes/java/main")
+        testOutputDir = file("${layout.buildDirectory.get()}/classes/java/test")
+        inheritOutputDirs = false
+        generatedSourceDirs += file(generatedSrcDir)
     }
 }

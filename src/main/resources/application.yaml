@@ -6,6 +6,10 @@ spring:
       ddl-auto: none
   messages:
     basename: messages
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
   mail:
     host: smtp.gmail.com
     port: 587
@@ -32,6 +36,11 @@ server:
 jasypt:
   encryptor:
     password: ${JASYPT_KEY:g22PKJqfCnc-4fQ.}
+jwt:
+  secret: ${JWT_SECRET:mySecretKeyForJwtTokenGenerationThatIsAtLeast256BitsLong}
+  access-token-validity: 1800000
+  refresh-token-validity: 1209600000
+  profile-verification-token-validity: 300000
 springdoc:
   api-docs:
     path: /v3/api-docs
