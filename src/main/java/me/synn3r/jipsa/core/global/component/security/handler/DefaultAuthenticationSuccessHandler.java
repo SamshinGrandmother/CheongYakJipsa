@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import me.synn3r.jipsa.core.api.auth.service.RefreshTokenService;
 import me.synn3r.jipsa.core.global.component.security.jwt.JwtTokenProvider;
 import me.synn3r.jipsa.core.global.component.security.service.AuthenticationHistoryService;
 import me.synn3r.jipsa.core.global.component.security.userdetails.DefaultUserDetails;
@@ -29,6 +30,7 @@ public class DefaultAuthenticationSuccessHandler implements AuthenticationSucces
 	private static final String SUCCESS_MESSAGE_KEY = "security.success.Authentication";
 
 	private final JwtTokenProvider jwtTokenProvider;
+	private final RefreshTokenService refreshTokenService;
 	private final AuthenticationHistoryService authenticationHistoryService;
 	private final ObjectMapper objectMapper;
 	private final MessageSource messageSource;
@@ -38,8 +40,13 @@ public class DefaultAuthenticationSuccessHandler implements AuthenticationSucces
 		Authentication authentication) throws IOException {
 
 		DefaultUserDetails userDetails = (DefaultUserDetails)authentication.getPrincipal();
+		String userId = userDetails.getUsername();
 
 		String accessToken = jwtTokenProvider.createAccessToken(userDetails);
+		String refreshToken = jwtTokenProvider.createRefreshToken(userId);
+		String tokenId = jwtTokenProvider.getTokenIdFromRefreshToken(refreshToken);
+
+		refreshTokenService.save(userId, tokenId);
 
 		response.setHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + accessToken);
 		response.setStatus(HttpStatus.OK.value());
@@ -47,12 +54,12 @@ public class DefaultAuthenticationSuccessHandler implements AuthenticationSucces
 		response.setCharacterEncoding(CHARACTER_ENCODING);
 
 		String message = messageSource.getMessage(SUCCESS_MESSAGE_KEY, null, LocaleContextHolder.getLocale());
-		AuthenticationSuccessResponse successResponse = new AuthenticationSuccessResponse(message);
+		AuthenticationSuccessResponse successResponse = new AuthenticationSuccessResponse(message, refreshToken);
 		objectMapper.writeValue(response.getWriter(), successResponse);
 
-		authenticationHistoryService.recordSuccess(userDetails.getUsername());
+		authenticationHistoryService.recordSuccess(userId);
 	}
 
-	public record AuthenticationSuccessResponse(String message) {
+	public record AuthenticationSuccessResponse(String message, String refreshToken) {
 	}
 }

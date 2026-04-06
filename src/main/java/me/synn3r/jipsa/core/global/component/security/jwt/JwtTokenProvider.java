@@ -143,6 +143,15 @@ public class JwtTokenProvider {
 		return false;
 	}
 
+	public boolean isRefreshToken(String token) {
+		try {
+			Claims claims = parseClaims(token);
+			return TOKEN_TYPE_REFRESH.equals(claims.get(CLAIM_TYPE, String.class));
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 	public boolean validateProfileVerificationToken(String token) {
 		try {
 			Claims claims = parseClaims(token);
