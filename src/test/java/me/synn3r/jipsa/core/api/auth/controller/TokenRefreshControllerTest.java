@@ -64,7 +64,8 @@ class TokenRefreshControllerTest extends AuthTestSupport {
 			.andExpect(header().string("Authorization", "Bearer " + NEW_ACCESS_TOKEN))
 			.andExpect(jsonPath("$.refreshToken").value(NEW_REFRESH_TOKEN));
 
-		verify(refreshTokenService).save(USER_ID, NEW_TOKEN_ID);
+		verify(refreshTokenService).rotate(USER_ID, TOKEN_ID, NEW_TOKEN_ID);
+		verify(refreshTokenService, never()).save(anyString(), anyString());
 	}
 
 	@Test
@@ -130,9 +131,24 @@ class TokenRefreshControllerTest extends AuthTestSupport {
 		when(jwtTokenProvider.getUserIdFromToken(VALID_REFRESH_TOKEN)).thenReturn(USER_ID);
 		when(jwtTokenProvider.getTokenIdFromRefreshToken(VALID_REFRESH_TOKEN)).thenReturn(TOKEN_ID);
 		when(refreshTokenService.validate(USER_ID, TOKEN_ID)).thenReturn(true);
+		when(refreshTokenService.rotate(USER_ID, TOKEN_ID, NEW_TOKEN_ID)).thenReturn(true);
 		when(userDetailsService.loadUserByUsername(USER_ID)).thenReturn(userDetails);
 		when(jwtTokenProvider.createAccessToken(userDetails)).thenReturn(NEW_ACCESS_TOKEN);
 		when(jwtTokenProvider.createRefreshToken(USER_ID)).thenReturn(NEW_REFRESH_TOKEN);
 		when(jwtTokenProvider.getTokenIdFromRefreshToken(NEW_REFRESH_TOKEN)).thenReturn(NEW_TOKEN_ID);
+	}
+
+	@Test
+	@DisplayName("초기 검증 뒤 로그아웃되어 교체에 실패하면 새 토큰을 응답하지 않는다")
+	void refreshRejectsLostRotation() throws Exception {
+		stubValidRefreshScenario(getMockUserDetails());
+		when(refreshTokenService.rotate(USER_ID, TOKEN_ID, NEW_TOKEN_ID)).thenReturn(false);
+		when(messageSource.getMessage(any(), any(), any())).thenReturn("유효하지 않은 Refresh Token입니다.");
+
+		mockMvc.perform(post(REFRESH_URL).header("Authorization", "Bearer " + VALID_REFRESH_TOKEN))
+			.andExpect(status().isUnauthorized())
+			.andExpect(header().doesNotExist("Authorization"))
+			.andExpect(jsonPath("$.refreshToken").doesNotExist());
+		verify(refreshTokenService, never()).save(anyString(), anyString());
 	}
 }

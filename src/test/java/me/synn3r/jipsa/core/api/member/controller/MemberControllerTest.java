@@ -33,6 +33,7 @@ import me.synn3r.jipsa.core.api.member.repository.MemberRepository;
 import me.synn3r.jipsa.core.api.member.service.MemberService;
 import me.synn3r.jipsa.core.config.security.TestSecurityConfig;
 import me.synn3r.jipsa.core.global.component.security.enums.Role;
+import me.synn3r.jipsa.core.global.component.security.jwt.JwtTokenProvider;
 
 @WebMvcTest(controllers = MemberController.class,
 	includeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = TestSecurityConfig.class))
@@ -46,6 +47,8 @@ class MemberControllerTest extends MemberTestSupport {
 	private MemberRepository memberRepository;
 	@MockBean
 	private MemberMapper memberMapper;
+	@MockBean
+	private JwtTokenProvider jwtTokenProvider;
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	@Autowired
 	private MockMvc mockMvc;
