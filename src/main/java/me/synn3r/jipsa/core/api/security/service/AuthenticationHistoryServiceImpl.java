@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import me.synn3r.jipsa.core.api.base.enumeration.ResultType;
+import me.synn3r.jipsa.core.api.commons.enumeration.ResultType;
 import me.synn3r.jipsa.core.api.member.entity.Member;
 import me.synn3r.jipsa.core.api.member.entity.MemberAccessHistory;
 import me.synn3r.jipsa.core.api.member.repository.MemberAccessHistoryRepository;
