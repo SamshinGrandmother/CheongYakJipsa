@@ -1,0 +1,76 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # MariaDB (MySQL 호환)
+  mariadb:
+    image: mariadb:10.7
+    container_name: cheongyak-db
+    environment:
+      MARIADB_ROOT_PASSWORD: root123      # ← 이걸 사용해야 함 (POSTGRES_PASSWORD 아님!)
+      MARIADB_USER: jibsa                 # ← MARIADB_USER 사용
+      MARIADB_PASSWORD: jibsa
+      MARIADB_DATABASE: cheongyak
+      MARIADB_INITDB_ARGS: "--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
+      TZ: Asia/Seoul
+    ports:
+      - "3306:3306"
+    volumes:
+      # 데이터 영속성
+      - cheongyak_db_data:/var/lib/mysql
+      # 초기화 스크립트
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD", "mariadb-admin", "ping", "-u", "root", "-proot123" ]  # ← MariaDB 용 헬스체크
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cheongyak-network
+
+  # Redis Cache
+  redis:
+    image: redis:8.4
+    container_name: cheongyak-redis
+    ports:
+      - "16379:6379"
+    volumes:
+      - cheongyak_redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cheongyak-network
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: mailpit
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP 포트 (Spring Boot가 여기로 메일 발송)
+      - "8025:8025" # Web UI 포트 (브라우저에서 메일 확인)
+    volumes:
+      - mailpit_data:/data
+    networks:
+      - cheongyak-network
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+      MP_UI_AUTH: "admin:adminpass"
+      MP_SMTP_AUTH: "security:securty123"
+
+volumes:
+  cheongyak_db_data:
+    driver: local
+  cheongyak_redis_data:
+    driver: local
+  mailpit_data:
+    driver: local
+
+networks:
+  cheongyak-network:
+    driver: bridge
