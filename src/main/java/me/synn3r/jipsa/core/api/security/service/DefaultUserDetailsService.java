@@ -1,0 +1,31 @@
+package me.synn3r.jipsa.core.api.security.service;
+
+import java.util.Optional;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+
+import me.synn3r.jipsa.core.api.member.entity.Member;
+import me.synn3r.jipsa.core.api.member.entity.mapper.MemberMapper;
+import me.synn3r.jipsa.core.api.member.repository.MemberRepository;
+
+@Component
+public class DefaultUserDetailsService implements UserDetailsService {
+
+	private final MemberRepository memberRepository;
+	private final MemberMapper memberMapper;
+
+	public DefaultUserDetailsService(MemberRepository memberRepository, MemberMapper memberMapper) {
+		this.memberRepository = memberRepository;
+		this.memberMapper = memberMapper;
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Member member = Optional.ofNullable(memberRepository.findByUserId(username))
+			.orElseThrow(() -> new UsernameNotFoundException("Invalid username : " + username));
+		return memberMapper.toUserDetails(member);
+	}
+}

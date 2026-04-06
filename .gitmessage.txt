@@ -1,0 +1,51 @@
+# <type>(<scope>): <subject>
+# <blank line>
+# <body>
+# <blank line>
+# <footer>
+
+# ==== 타입(type) ====
+# feat: 새로운 기능
+# fix: 버그 수정
+# docs: 문서 수정
+# style: 코드 포맷팅, 세미콜론 누락 등 (기능 변화 X)
+# refactor: 기능은 같지만 코드 구조 개선
+# perf: 성능 개선
+# test: 테스트 추가 또는 수정
+# chore: 빌드, 의존성, CI/CD 설정 등
+# ci: CI/CD 설정 파일 수정
+# build: 빌드 관련 파일 수정 (pom.xml, Dockerfile 등)
+
+# ==== 스코프(scope) ====
+# 변경의 범위를 지정 (선택사항)
+# 예: (api), (auth), (database), (frontend)
+
+# ==== 제목(subject) ====
+# - 명령조로 시작 (added X, add O)
+# - 첫 글자 대문자 X (add O, Add X)
+# - 끝에 마침표 X
+# - 50글자 이내
+
+# ==== 본문(body) ====
+# - 왜 변경했는지, 어떻게 변경했는지 설명
+# - 각 라인 72글자 이내
+# - 여러 문제를 해결했다면 각각 설명
+
+# ==== 푸터(footer) ====
+# - Closes #123 (이슈 번호 링크)
+# - Breaking change: ... (호환성 깨지는 변경사항)
+# - Reviewed-by: @username
+
+# ==== 예시 ====
+# feat(auth): add JWT token refresh endpoint
+#
+# Implement automatic token refresh mechanism to improve user experience.
+# When a token is about to expire, the client can request a new token
+# without requiring the user to log in again.
+#
+# - Added RefreshTokenController
+# - Added RefreshTokenService with automatic expiry check
+# - Updated SecurityConfig to allow refresh endpoint access
+#
+# Closes #456
+# Reviewed-by: @teammate

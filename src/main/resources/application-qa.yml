@@ -1,0 +1,59 @@
+# ========================================
+# QA 환경 (Quality Assurance)
+# ========================================
+# - QA 엔지니어 및 프론트엔드 개발자 협업 환경에서 사용
+# - 민감 정보는 환경변수 주입 가능, 기본값 제공
+# - Swagger UI 활성화
+# ========================================
+
+spring:
+  batch:
+    job:
+      names: ${home.batch.jobName:NONE}
+  sql:
+    init:
+      mode: never
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: ${DB_URL:ENC(AMZvbT7nA3DJJIbafQx85SLCwuTMW12JKQ2cUocFh38OiYxJMRA/T359lVHN/vKCoS2zCMCEXCw=)}
+    username: ${DB_USERNAME:ENC(2Y0z4iiVdltYrrSkJ0GlMQ==)}
+    password: ${DB_PASSWORD:ENC(hYV7HjzY/AfsRCbDXznJYE0nrmsVL/2evvMiTnejKauO2XA6I2T59EzI5IH7HblI)}
+  jpa:
+    show-sql: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:leunj87511@gmail.com}
+    password: ${MAIL_PASSWORD:nacg ccms smzz fkny}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+    auth-code-expiration-millis: 1800000
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_KEY:g22PKJqfCnc-4fQ.}
+
+jwt:
+  secret: ${JWT_SECRET:mySecretKeyForJwtTokenGenerationThatIsAtLeast256BitsLong}
+
+dataApi:
+  applyHome:
+    apiKey: ${DATA_API_KEY:3Ef3hiJShpTGdcBWDIEoucZHTET/stBz1mlvGX4TeVKjIXdRxffm2sLXBmNK7ZNJKJNnFw+3t8StJOrO/3Grjw==}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true

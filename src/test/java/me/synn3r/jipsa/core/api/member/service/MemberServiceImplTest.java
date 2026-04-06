@@ -24,6 +24,7 @@ import me.synn3r.jipsa.core.api.member.domain.MemberSearchCondition;
 import me.synn3r.jipsa.core.api.member.entity.Member;
 import me.synn3r.jipsa.core.api.member.entity.mapper.MemberMapper;
 import me.synn3r.jipsa.core.api.member.repository.MemberRepository;
+import me.synn3r.jipsa.core.api.member.service.impl.MemberServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("사용자 서비스 테스트")
