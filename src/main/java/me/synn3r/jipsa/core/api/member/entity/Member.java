@@ -1,5 +1,7 @@
 package me.synn3r.jipsa.core.api.member.entity;
 
+import org.hibernate.annotations.Comment;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,11 +15,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import me.synn3r.jipsa.core.api.base.entity.BaseEntity;
-import me.synn3r.jipsa.core.api.base.enumeration.DeleteType;
+import me.synn3r.jipsa.core.api.commons.entity.BaseEntity;
+import me.synn3r.jipsa.core.api.commons.enumeration.DeleteType;
 import me.synn3r.jipsa.core.api.member.domain.MemberRequest;
-import me.synn3r.jipsa.core.component.security.Role;
-import org.hibernate.annotations.Comment;
+import me.synn3r.jipsa.core.global.component.security.enums.Role;
 
 @Entity
 @Getter
@@ -25,71 +26,70 @@ import org.hibernate.annotations.Comment;
 @Comment("사용자 및 관리자 테이블")
 public class Member extends BaseEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Comment("사용자 및 관리자의 식별자")
+	@Column(name = "member_id")
+	private Long id;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Comment("사용자 및 관리자의 식별자")
-  @Column(name="member_id")
-  private Long id;
+	@NotBlank
+	@Column(updatable = false)
+	@Comment("사용자 및 관리자가 인증 시 사용하는 ID")
+	private String userId;
 
-  @NotBlank
-  @Column(updatable = false)
-  @Comment("사용자 및 관리자가 인증 시 사용하는 ID")
-  private String userId;
+	@NotBlank
+	@Comment("사용자 및 관리자의 이름")
+	private String name;
 
-  @NotBlank
-  @Comment("사용자 및 관리자의 이름")
-  private String name;
+	@NotBlank
+	@Email
+	@Column
+	@Comment("사용자 및 관리자의 이메일")
+	private String email;
 
-  @NotBlank
-  @Email
-  @Column
-  @Comment("사용자 및 관리자의 이메일")
-  private String email;
+	@NotBlank
+	@Comment("사용자 및 관리자의 패스워드")
+	private String password;
 
-  @NotBlank
-  @Comment("사용자 및 관리자의 패스워드")
-  private String password;
+	@Enumerated(EnumType.STRING)
+	@NotNull
+	@Comment("사용자 및 관리자의 권한")
+	private Role role;
 
-  @Enumerated(EnumType.STRING)
-  @NotNull
-  @Comment("사용자 및 관리자의 권한")
-  private Role role;
+	@NotNull
+	@Comment("사용자 및 관리자의 전화번호")
+	private String phoneNumber;
 
-  @NotNull
-  @Comment("사용자 및 관리자의 전화번호")
-  private String phoneNumber;
+	@Enumerated(EnumType.STRING)
+	@Comment("사용자 및 관리자의 삭제 여부")
+	private DeleteType deleteType = DeleteType.ACTIVE;
 
-  @Enumerated(EnumType.STRING)
-  @Comment("사용자 및 관리자의 삭제 여부")
-  private DeleteType deleteType = DeleteType.ACTIVE;
+	public Member(Long id, String email, String userId, String name, String password, Role role,
+		String phoneNumber) {
+		this.id = id;
+		this.email = email;
+		this.userId = userId;
+		this.name = name;
+		this.password = password;
+		this.role = role;
+		this.phoneNumber = phoneNumber;
+	}
 
-  public Member(Long id, String email, String userId, String name, String password, Role role,
-    String phoneNumber) {
-    this.id = id;
-    this.email = email;
-    this.userId = userId;
-    this.name = name;
-    this.password = password;
-    this.role = role;
-    this.phoneNumber = phoneNumber;
-  }
+	public void update(String name) {
+		this.name = name;
+	}
 
-  public void update(String name) {
-    this.name = name;
-  }
+	public void updatePassword(String password) {
+		this.password = password;
+	}
 
-  public void updatePassword(String password) {
-    this.password = password;
-  }
+	public void delete() {
+		deleteType = DeleteType.DELETE;
+	}
 
-  public void delete() {
-    deleteType = DeleteType.DELETE;
-  }
-
-  public void updateMemberInfo(MemberRequest memberRequest) {
-    this.email = memberRequest.getEmail();
-    this.name = memberRequest.getName();
-    this.phoneNumber = memberRequest.getPhoneNumber();
-  }
+	public void updateMemberInfo(MemberRequest memberRequest) {
+		this.email = memberRequest.getEmail();
+		this.name = memberRequest.getName();
+		this.phoneNumber = memberRequest.getPhoneNumber();
+	}
 }

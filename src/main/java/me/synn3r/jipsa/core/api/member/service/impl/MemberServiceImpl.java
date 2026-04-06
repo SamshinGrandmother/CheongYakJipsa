@@ -1,0 +1,132 @@
+package me.synn3r.jipsa.core.api.member.service.impl;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import me.synn3r.jipsa.core.api.member.domain.MemberRequest;
+import me.synn3r.jipsa.core.api.member.domain.MemberResponse;
+import me.synn3r.jipsa.core.api.member.domain.MemberSearchCondition;
+import me.synn3r.jipsa.core.api.member.entity.Member;
+import me.synn3r.jipsa.core.api.member.entity.mapper.MemberMapper;
+import me.synn3r.jipsa.core.api.member.repository.MemberRepository;
+import me.synn3r.jipsa.core.api.member.service.MemberAccessService;
+import me.synn3r.jipsa.core.api.member.service.MemberService;
+import me.synn3r.jipsa.core.global.component.security.enums.AuthenticationFailureType;
+import me.synn3r.jipsa.core.global.component.security.jwt.JwtTokenProvider;
+import me.synn3r.jipsa.core.global.component.security.logging.AuthenticationFailureLogger;
+import me.synn3r.jipsa.core.global.component.security.logging.AuthenticationSuccessLogger;
+import me.synn3r.jipsa.core.global.component.security.userdetails.DefaultUserDetails;
+
+@Service
+@Transactional(readOnly = true)
+public class MemberServiceImpl implements MemberService, AuthenticationSuccessLogger,
+	AuthenticationFailureLogger {
+
+	private final MemberRepository memberRepository;
+	private final MemberMapper memberMapper;
+	private final PasswordEncoder passwordEncoder;
+	private final MemberAccessService memberAccessService;
+	private final JwtTokenProvider jwtTokenProvider;
+
+	public MemberServiceImpl(MemberRepository memberRepository, MemberMapper memberMapper,
+		PasswordEncoder passwordEncoder, MemberAccessService memberAccessService,
+		JwtTokenProvider jwtTokenProvider) {
+		this.memberRepository = memberRepository;
+		this.memberMapper = memberMapper;
+		this.passwordEncoder = passwordEncoder;
+		this.memberAccessService = memberAccessService;
+		this.jwtTokenProvider = jwtTokenProvider;
+	}
+
+	@Override
+	public List<MemberResponse> findMembers(MemberSearchCondition memberSearchCondition) {
+		return memberRepository.findMembers(memberSearchCondition);
+	}
+
+	@Override
+	public MemberResponse findMember(long id) {
+		return memberMapper.toMemberResponse(memberRepository.findById(id)
+			.orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다. ")));
+	}
+
+	@Override
+	public String verifyMember(String password) {
+		DefaultUserDetails details = (DefaultUserDetails)SecurityContextHolder.getContext().getAuthentication()
+			.getPrincipal();
+		if (!passwordEncoder.matches(password, details.getPassword())) {
+			throw new BadCredentialsException("비밀번호가 일치하지 않습니다. ");
+		}
+
+		return jwtTokenProvider.createProfileVerificationToken(details.getUsername());
+	}
+
+	@Override
+	@Transactional
+	public long saveMember(MemberRequest memberRequest) {
+		if (memberRepository.existsMemberByEmail(memberRequest.getEmail())) {
+			throw new DuplicateKeyException("이미 존재하는 이메일 입니다. ");
+		}
+		Member member = memberRepository.save(
+			memberMapper.toEntity(memberRequest, passwordEncoder.encode(
+				memberRequest.getPassword())));
+		return member.getId();
+	}
+
+	@Override
+	@Transactional
+	public void updateMember(MemberRequest memberRequest) {
+		Member member = memberRepository.findById(memberRequest.getId())
+			.orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다. "));
+
+		member.updateMemberInfo(memberRequest);
+
+	}
+
+	@Override
+	@Transactional
+	public void updatePassword(MemberRequest memberRequest) {
+		Member member = memberRepository.findById(memberRequest.getId())
+			.orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다. "));
+		member.updatePassword(passwordEncoder.encode(memberRequest.getPassword()));
+	}
+
+	@Override
+	@Transactional
+	public void deleteMember(long id) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다. "));
+		member.delete();
+	}
+
+	@Override
+	public MemberResponse findMemberByUserId(String userId) {
+		return memberMapper.toMemberResponse(memberRepository.findByUserId(userId));
+	}
+
+	@Override
+	@Transactional
+	public void saveAuthenticationFailureHistory(String username,
+		AuthenticationFailureType authenticationFailureType) {
+		Member member = memberRepository.findByUserId(username);
+		if (member != null) {
+			memberAccessService.saveMemberAccessFailureHistory(member, authenticationFailureType);
+			return;
+		}
+		memberAccessService.saveMemberAccessFailureHistory(username, authenticationFailureType);
+	}
+
+	@Override
+	@Transactional
+	public void saveAuthenticationSuccessHistory(UserDetails userDetails) {
+		Member member = memberRepository.findByUserId(userDetails.getUsername());
+		memberAccessService.saveMemberAccessHistory(member);
+	}
+}

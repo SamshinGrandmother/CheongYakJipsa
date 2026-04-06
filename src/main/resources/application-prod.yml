@@ -1,0 +1,59 @@
+# ========================================
+# 운영 환경 (Production)
+# ========================================
+# - 서비스 운영 환경에서 사용
+# - 모든 민감 정보는 환경변수로 필수 주입 (기본값 없음)
+# - Swagger UI 비활성화
+# ========================================
+
+spring:
+  batch:
+    job:
+      names: ${home.batch.jobName:NONE}
+  sql:
+    init:
+      mode: never
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    show-sql: false
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+    auth-code-expiration-millis: 1800000
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_KEY}
+
+jwt:
+  secret: ${JWT_SECRET}
+
+dataApi:
+  applyHome:
+    apiKey: ${DATA_API_KEY}
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

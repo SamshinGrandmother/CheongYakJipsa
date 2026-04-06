@@ -1,3 +1,10 @@
+# ========================================
+# 개발 환경 (Development)
+# ========================================
+# - 개발자의 로컬 개발 환경에서 사용
+# - Swagger UI 활성화
+# ========================================
+
 spring:
   batch:
     job:
@@ -7,11 +14,64 @@ spring:
       mode: never
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: ENC(AMZvbT7nA3DJJIbafQx85SLCwuTMW12JKQ2cUocFh38OiYxJMRA/T359lVHN/vKCoS2zCMCEXCw=)
-    username: ENC(2Y0z4iiVdltYrrSkJ0GlMQ==)
-    password: ENC(hYV7HjzY/AfsRCbDXznJYE0nrmsVL/2evvMiTnejKauO2XA6I2T59EzI5IH7HblI)
+    url: jdbc:mariadb://localhost:3306/cheongyak
+    username: jibsa
+    password: jibsa
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: none
+  data:
+    redis:
+      host: localhost
+      port: 16379
+  mail:
+    host: localhost
+    port: 1025
+    username: security
+    password: securty123
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: false
+            required: false
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+    auth-code-expiration-millis: 1800000
+  docker:
+    compose:
+      enabled: false
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_KEY:g22PKJqfCnc-4fQ.}
+
+jwt:
+  secret: ${JWT_SECRET:mySecretKeyForJwtTokenGenerationThatIsAtLeast256BitsLong}
+
 dataApi:
   applyHome:
-    apiKey: 3Ef3hiJShpTGdcBWDIEoucZHTET/stBz1mlvGX4TeVKjIXdRxffm2sLXBmNK7ZNJKJNnFw+3t8StJOrO/3Grjw==
+    apiKey: ${DATA_API_KEY:3Ef3hiJShpTGdcBWDIEoucZHTET/stBz1mlvGX4TeVKjIXdRxffm2sLXBmNK7ZNJKJNnFw+3t8StJOrO/3Grjw==}
+
+# ========================================
+# 이메일 인증 설정
+# ========================================
+# strategy: code - 6자리 인증번호 입력 방식 (기본값)
+# strategy: link - 인증 링크 클릭 방식
+# ========================================
+email:
+  verification:
+    strategy: code
+
+# 링크 방식 사용 시 필요한 설정
+app:
+  base-url: http://localhost:8080
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true

@@ -39,6 +39,7 @@ ext {
     set('mariaDBVersion', "3.5.4")
     set('springdocOpenapiStarterWebmvcUi', "2.6.0")
     set('jjwtVersion', "0.12.5")
+    set('dockerComposeVersion', "3.1.1")
 }
 
 dependencies {
@@ -53,6 +54,7 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
     runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
+    runtimeOnly "org.springframework.boot:spring-boot-docker-compose:${dockerComposeVersion}"
     implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:${jasyptVersion}"
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign:${feignClientVersion}"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
@@ -60,6 +62,7 @@ dependencies {
     implementation "com.querydsl:querydsl-core:${querydslVersion}"
     implementation "org.mariadb.jdbc:mariadb-java-client:${mariaDBVersion}"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocOpenapiStarterWebmvcUi}"
+
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor(

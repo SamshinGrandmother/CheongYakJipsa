@@ -9,12 +9,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import me.synn3r.jipsa.core.api.base.domain.Request.Insert;
-import me.synn3r.jipsa.core.api.base.domain.Request.Update;
-import me.synn3r.jipsa.core.api.base.domain.Request.UpdatePassword;
-import me.synn3r.jipsa.core.api.member.validation.PasswordComplexity;
-import me.synn3r.jipsa.core.api.member.validation.PasswordConfirm;
-import me.synn3r.jipsa.core.component.security.Role;
+import me.synn3r.jipsa.core.api.commons.domain.Request.Insert;
+import me.synn3r.jipsa.core.api.commons.domain.Request.Update;
+import me.synn3r.jipsa.core.api.commons.domain.Request.UpdatePassword;
+import me.synn3r.jipsa.core.global.component.security.enums.Role;
+import me.synn3r.jipsa.core.global.component.validation.annotation.PasswordComplexity;
+import me.synn3r.jipsa.core.global.component.validation.annotation.PasswordConfirm;
 
 @Getter
 @Setter
@@ -23,34 +23,34 @@ import me.synn3r.jipsa.core.component.security.Role;
 @PasswordConfirm(groups = {Insert.class, UpdatePassword.class})
 public class MemberRequest {
 
-  @NotNull(groups = {Update.class, UpdatePassword.class})
-  @Min(value = 1, groups = {Update.class, UpdatePassword.class})
-  private Long id;
+	@NotNull(groups = {Update.class, UpdatePassword.class}, message = "{member.validation.id.notNull}")
+	@Min(value = 1, groups = {Update.class, UpdatePassword.class}, message = "{member.validation.id.min}")
+	private Long id;
 
-  @NotEmpty(groups = {Insert.class})
-  private String userId;
+	@NotEmpty(groups = {Insert.class}, message = "{member.validation.userId.notEmpty}")
+	private String userId;
 
-  @NotEmpty(groups = {Insert.class, Update.class}, message = "이름을 입력해 주세요.")
-  private String name;
+	@NotEmpty(groups = {Insert.class, Update.class}, message = "{member.validation.name.notEmpty}")
+	private String name;
 
-  @NotEmpty(groups = {Insert.class, Update.class,}, message = "이메일을 입력해 주세요.")
-  @Email(groups = {Insert.class, Update.class}, message = "이메일 형식대로 입력해 주세요")
-  private String email;
+	@NotEmpty(groups = {Insert.class, Update.class}, message = "{member.validation.email.notEmpty}")
+	@Email(groups = {Insert.class, Update.class}, message = "{member.validation.email.invalid}")
+	private String email;
 
-  @NotNull(groups = {Insert.class})
-  private Role role;
+	@NotNull(groups = {Insert.class}, message = "{member.validation.role.notNull}")
+	private Role role;
 
-  @NotEmpty(groups = {Insert.class, UpdatePassword.class})
-  @PasswordComplexity(groups = {Insert.class, UpdatePassword.class})
-  private String password;
+	@NotEmpty(groups = {Insert.class, UpdatePassword.class}, message = "{member.validation.password.notEmpty}")
+	@PasswordComplexity(groups = {Insert.class, UpdatePassword.class})
+	private String password;
 
-  @NotEmpty(groups = {Insert.class, UpdatePassword.class}, message = "비밀번호 확인을 입력해 주세요.")
-  private String passwordConfirm;
+	@NotEmpty(groups = {Insert.class, UpdatePassword.class}, message = "{member.validation.passwordConfirm.notEmpty}")
+	private String passwordConfirm;
 
-  @NotEmpty(groups = {Insert.class, Update.class}, message = "전화번호를 입력해 주세요.")
-  private String phoneNumber;
+	@NotEmpty(groups = {Insert.class, Update.class}, message = "{member.validation.phoneNumber.notEmpty}")
+	private String phoneNumber;
 
-  @AssertTrue(groups = {Insert.class, Update.class}, message = "이메일 인증을 완료해주세요.")
-  private Boolean isEmailVerified;
+	@AssertTrue(groups = {Insert.class, Update.class}, message = "{member.validation.isEmailVerified.assertTrue}")
+	private Boolean isEmailVerified;
 
 }
