@@ -105,6 +105,7 @@ public class SecurityConfig {
 	 * @see DefaultAuthenticationSuccessHandler 인증 성공 시 토큰 발급 핸들러
 	 */
 	private static final String LOGIN_URL = "/api/auth/login";
+	private static final String REFRESH_URL = "/api/auth/refresh";
 
 	/**
 	 * 회원 관련 API 엔드포인트 URL.
@@ -354,6 +355,7 @@ public class SecurityConfig {
 				.accessDeniedHandler(jwtAccessDeniedHandler))
 			.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers(LOGIN_URL).permitAll()
+				.requestMatchers(HttpMethod.POST, REFRESH_URL).permitAll()
 				.requestMatchers(HttpMethod.POST, MEMBERS_URL).permitAll()
 				.requestMatchers(HttpMethod.POST, VERIFY_EMAIL_URL, CHECK_EMAIL_CODE_URL).permitAll()
 				.requestMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
