@@ -22,7 +22,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ./gradlew clean
 ```
 
-## Tech Stack
+## 기술 스택
 
 - **Java 21**, **Spring Boot 3.3.0**
 - **Spring Security** - JWT 기반 인증 (STATELESS)
@@ -55,22 +55,33 @@ src/main/java/me/synn3r/jipsa/core/
 ## Key Patterns
 
 ### JWT 인증 흐름
+
 1. `POST /api/auth/login` → Access Token (30분) + Refresh Token (14일, Redis 저장)
 2. `JwtAuthenticationFilter`가 모든 요청에서 토큰 검증
 3. 프로필 수정 시 `ProfileVerificationFilter`로 비밀번호 재검증 필요
 
 ### 응답 구조
+
 ```java
-SuccessResponse<T> { resultType: SUCCESS, data: T }
-FailResponse { resultType: FAIL, errorMessage: String }
+SuccessResponse<T> {
+	resultType:
+	SUCCESS, data:T
+}
+
+FailResponse {
+	resultType:
+	FAIL, errorMessage:String
+}
 ```
 
 ### Validation Groups
+
 - `Insert.class` - 회원가입
 - `Update.class` - 정보 수정
 - `UpdatePassword.class` - 비밀번호 변경
 
 ### QueryDSL & MapStruct
+
 - Generated 소스: `build/generated/sources/annotationProcessor/java/main`
 - QueryDSL Custom Repository: `*RepositoryCustom` 인터페이스 + `*RepositoryCustomImpl` 구현
 - MapStruct: Spring Bean으로 생성 (생성자 주입), `@Mapper(componentModel = "spring")`
