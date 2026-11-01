@@ -3,11 +3,13 @@ package me.synn3r.jipsa.core.global.component.security.filter;
 import java.io.IOException;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,9 +32,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		String token = resolveToken(request);
 
-		if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-			Authentication authentication = jwtTokenProvider.getAuthenticationFromClaims(token);
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+		if (StringUtils.hasText(token)) {
+			try {
+				Authentication authentication = jwtTokenProvider.getAuthenticationFromClaims(token);
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			} catch (JwtException | AuthenticationException | IllegalArgumentException exception) {
+				// Refresh 요청은 컨트롤러에서 별도로 검증하고 보호된 API는 인증 진입점에서 401로 처리한다.
+				SecurityContextHolder.clearContext();
+			}
 		}
 
 		filterChain.doFilter(request, response);

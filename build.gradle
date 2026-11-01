@@ -114,10 +114,25 @@ tasks {
     }
 
     test {
-        useJUnitPlatform()
+        useJUnitPlatform {
+            excludeTags 'redis-integration'
+        }
         maxParallelForks = Runtime.runtime.availableProcessors() / 2
         jvmArgs '-Xshare:off'
     }
+}
+
+tasks.register('redisIntegrationTest', Test) {
+    description = 'Runs logout/refresh integration tests against a dedicated local Redis.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform {
+        includeTags 'redis-integration'
+    }
+    maxParallelForks = 1
+    jvmArgs '-Xshare:off'
+    shouldRunAfter tasks.named('test')
 }
 
 idea {

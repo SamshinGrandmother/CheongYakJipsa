@@ -1,5 +1,6 @@
 package me.synn3r.jipsa.core.api.auth.service;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -82,5 +83,11 @@ class RedisRefreshTokenServiceImplTest {
 		refreshTokenService.delete(USER_ID);
 
 		verify(redisTemplate).delete(KEY_PREFIX + USER_ID);
+	}
+
+	@Test
+	@DisplayName("tokenId가 없는 Refresh Token은 인증에 사용할 수 없다")
+	void validateMissingTokenId() {
+		assertThat(refreshTokenService.validate(USER_ID, null)).isFalse();
 	}
 }

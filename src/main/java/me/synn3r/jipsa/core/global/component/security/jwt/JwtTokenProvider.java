@@ -5,10 +5,12 @@ import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -104,12 +106,21 @@ public class JwtTokenProvider {
 
 	public Authentication getAuthenticationFromClaims(String token) {
 		Claims claims = parseClaims(token);
-
-		long id = claims.get(CLAIM_ID, Long.class);
+		String type = claims.get(CLAIM_TYPE, String.class);
+		Long id = claims.get(CLAIM_ID, Long.class);
 		String userId = claims.getSubject();
+		String roleName = claims.get(CLAIM_ROLE, String.class);
+
+		// 기존 Access Token은 type이 없으므로 필수 클레임을 함께 확인해 호환성을 유지한다.
+		if ((type != null && !"access".equals(type)) || id == null
+			|| !StringUtils.hasText(userId) || !StringUtils.hasText(roleName)
+			|| claims.getExpiration() == null) {
+			throw new BadCredentialsException("Invalid access token");
+		}
+
 		String email = claims.get(CLAIM_EMAIL, String.class);
 		String name = claims.get(CLAIM_NAME, String.class);
-		Role role = Role.valueOf(claims.get(CLAIM_ROLE, String.class));
+		Role role = Role.valueOf(roleName);
 
 		DefaultUserDetails userDetails = new DefaultUserDetails(id, userId, email, name, "", role);
 
